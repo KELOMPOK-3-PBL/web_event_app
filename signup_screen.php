@@ -50,9 +50,6 @@
         </div>
 
         <!-- Link untuk sign in -->
-        <div class="text-center">
-          <p class="text-sm">Already have an account? <a href="signin_screen.php" class="text-blue-500">Sign in</a></p>
-        </div>
       </form>
     </div>
   </div>

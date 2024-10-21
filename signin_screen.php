@@ -56,11 +56,6 @@
         <div class="mb-4">
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">SIGN IN</button>
         </div>
-
-        <!-- Link untuk sign up -->
-        <div class="text-center">
-          <p class="text-sm">Don’t have an account? <a href="signup_screen.php" class="text-blue-500">Sign up</a></p>
-        </div>
       </form>
     </div>
   </div>
