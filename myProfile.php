@@ -182,22 +182,6 @@
                     <i class="fas fa-cog text-blue-500 hover:text-blue-700 text-2xl"></i> <!-- Ikon Setting yang diperbesar -->
                 </div>
 
-                    <!-- Events, Followers, Following -->
-                    <div class="flex justify-between text-center text-gray-500 mb-4">
-                        <div>
-                            <span class="text-xl font-bold text-black">5</span>
-                            <p>Event</p>
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-black">200</span>
-                            <p>Followers</p>
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-black">100</span>
-                            <p>Following</p>
-                        </div>
-                    </div>
-
                     <!-- About Me Section -->
                     <div>
                         <h2 class="text-xl font-semibold mb-2">About Me</h2>
@@ -208,24 +192,64 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Events Section -->
-            <div class="mt-8">
-                <h2 class="text-2xl font-semibold mb-4">Recent Events</h2>
-                <div class="grid grid-cols-3 gap-4">
-                    <div class="event-card">
-                        <img src="../image/videotron_semnas.png" alt="Event Image" class="w-full h-40 object-cover rounded-lg">
-                    </div>
-                    <div class="event-card">
-                        <img src="../image/event_banner2.png" alt="Event Image" class="w-full h-40 object-cover rounded-lg">
-                    </div>
-                    <div class="event-card">
-                        <img src="../image/event_banner2.png" alt="Event Image" class="w-full h-40 object-cover rounded-lg">
-                    </div>
-                </div>
-            </div>
+    
 
         </div>
+
+        <div class="bg-white shadow-md rounded-lg p-8">
+    <h2 class="text-2xl font-semibold mb-6">System Statistics</h2>
+    
+    <!-- Stats Container -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Total Users -->
+        <div class="bg-blue-500 text-white p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold">Total Users</h3>
+                <p class="text-4xl font-bold mt-2">1,452</p>
+            </div>
+            <i class="fas fa-users fa-2x"></i>
+        </div>
+        
+        <!-- Active Events -->
+        <div class="bg-green-500 text-white p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold">Active Events</h3>
+                <p class="text-4xl font-bold mt-2">34</p>
+            </div>
+            <i class="fas fa-calendar-check fa-2x"></i>
+        </div>
+        
+        <!-- System Health -->
+        <div class="bg-red-500 text-white p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold">System Health</h3>
+                <p class="text-4xl font-bold mt-2">Good</p>
+            </div>
+            <i class="fas fa-heartbeat fa-2x"></i>
+        </div>
+    </div>
+
+    <!-- Additional Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <!-- Server Uptime -->
+        <div class="bg-yellow-500 text-white p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold">Server Uptime</h3>
+                <p class="text-4xl font-bold mt-2">99.9%</p>
+            </div>
+            <i class="fas fa-server fa-2x"></i>
+        </div>
+        
+        <!-- Database Queries -->
+        <div class="bg-purple-500 text-white p-6 rounded-lg shadow-md flex items-center justify-between">
+            <div>
+                <h3 class="text-lg font-semibold">Database Queries</h3>
+                <p class="text-4xl font-bold mt-2">1,234,567</p>
+            </div>
+            <i class="fas fa-database fa-2x"></i>
+        </div>
+    </div>
+</div>
 
     </div>
 
