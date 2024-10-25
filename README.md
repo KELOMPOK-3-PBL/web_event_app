@@ -18,4 +18,4 @@ TEXT 2
 
 # Links to the example headings above
 
-LINK CSS: [Tailwind](#https://tailwindcss.com/).
+LINK CSS: [Tailwind](#[text](https://tailwindcss.com/)).
