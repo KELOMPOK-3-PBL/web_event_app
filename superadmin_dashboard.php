@@ -165,7 +165,7 @@
         <section class="mt-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-4xl font-semibold">New Proposed Event</h2>
-                <a href="link-to-more-proposed-events.html" class="text-blue-500 hover:underline">See More</a>
+                <a href="proposed_event.php" class="text-blue-500 hover:underline">See More</a>
             </div>
             <div class="scroll-container">
                 <!-- Event Card -->
