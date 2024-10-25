@@ -96,15 +96,15 @@
     <div id="sidebar" class="bg-blue-500 w-16 h-screen fixed left-0 top-0 flex flex-col justify-between p-4 text-white">
         <div>
             <div class="flex items-center mb-12">
-                <img src="../image/polines_logo.png" alt="Polines Logo" class="w-12 h-12 object-contain cursor-pointer">
-                <span class="ml-3 text-3xl font-bold sidebar-item">Polivent</span>
+                <a href="superadmin_dashboard.php"><img src="image/polines_logo.png" alt="Polines Logo" class="w-12 h-12 object-contain cursor-pointer"></a>
+                <a href="superadmin_dashboard.php"><span class="ml-3 text-3xl font-bold sidebar-item">Polivent</span></a>
             </div>
             <div class="flex items-center mb-6">
                 <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-500 font-bold">
                     <span>U</span>
                 </div>
                 <div class="ml-3 sidebar-item">
-                    <a href="#" class="text-lg font-semibold">
+                    <a href="myProfile.php" class="text-lg font-semibold">
                         <p>Username123</p>
                     </a>
 
@@ -113,33 +113,33 @@
             <div class="divider"></div>
             <ul>
                 <li class="mb-4">
-                    <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_explore.png" alt="Explore" class="w-6 h-6">
+                    <a href="superadmin_dashboard.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_explore.png" alt="Explore" class="w-6 h-6">
                         <span class="sidebar-item">Explore</span>
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_calendar.png" alt="Event" class="w-6 h-6">
+                    <a href="superadmin_event_page.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_calendar.png" alt="Event" class="w-6 h-6">
                         <span class="sidebar-item">Event</span>
                     </a>
                 </li>
                 <li class="mb-4">
                     <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_approval.png" alt="Approval" class="w-6 h-6">
+                        <img src="image/logo_approval.png" alt="Approval" class="w-6 h-6">
                         <span class="sidebar-item">Approval</span>
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="flex items-center space -x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_account.png" alt="Accounts" class="w-6 h-6">
+                    <a href="superadmin_accountlist_page.php" class="flex items-center space -x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_account.png" alt="Accounts" class="w-6 h-6">
                         <span class="sidebar-item">Accounts</span>
                     </a>
                 </li>
             </ul>
         </div>
         <div>
-            <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+            <a href="signin_screen.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="sidebar-item">Log Out</span>
             </a>

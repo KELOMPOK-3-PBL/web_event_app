@@ -111,8 +111,8 @@
         <div>
             <!-- Sidebar Header (Logo and Polivent) -->
             <div class="flex items-center mb-12">
-                <img src="../image/polines_logo.png" alt="Polines Logo" class="w-12 h-12 object-contain cursor-pointer">
-                <span class="ml-3 text-3xl font-bold sidebar-item">Polivent</span>
+                <a href="superadmin_dashboard.php"><img src="image/polines_logo.png" alt="Polines Logo" class="w-12 h-12 object-contain cursor-pointer"></a>
+                <a href="superadmin_dashboard.php"><span class="ml-3 text-3xl font-bold sidebar-item">Polivent</span></a>
             </div>
 
             <!-- My Profile Section with spacing -->
@@ -133,26 +133,26 @@
             <!-- Menu Items with spacing -->
             <ul>
                 <li class="mb-4">
-                    <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_explore.png" alt="Explore" class="w-6 h-6">
+                    <a href="superadmin_dashboard.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_explore.png" alt="Explore" class="w-6 h-6">
                         <span class="sidebar-item">Explore</span>
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_calendar.png" alt="Event" class="w-6 h-6">
+                    <a href="superadmin_event_page.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_calendar.png" alt="Event" class="w-6 h-6">
                         <span class="sidebar-item">Event</span>
                     </a>
                 </li>
                 <li class="mb-4">
                     <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_approval.png" alt="Approval" class="w-6 h-6">
+                        <img src="image/logo_approval.png" alt="Approval" class="w-6 h-6">
                         <span class="sidebar-item">Approval</span>
                     </a>
                 </li>
                 <li class="mb-4">
-                    <a href="account_page.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
-                        <img src="../image/logo_account.png" alt="Accounts" class="w-6 h-6">
+                    <a href="superadmin_accountlist_page.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                        <img src="image/logo_account.png" alt="Accounts" class="w-6 h-6">
                         <span class="sidebar-item">Accounts</span>
                     </a>
                 </li>
@@ -161,7 +161,7 @@
 
         <!-- Sidebar Footer -->
         <div>
-            <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+            <a href="signin_screen.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="sidebar-item">Log Out</span>
             </a>
@@ -173,7 +173,9 @@
         <!-- Header Section -->
         <header class="flex justify-between items-center mb-6 bg-[#ADC6FF] w-full p-4 rounded-lg shadow-md">
             <div class="flex items-center space-x-4">
-                <button class="text-blue-500 font-semibold">Home</button>
+                <a href="superadmin_dashboard.php" class="text-blue-500 font-semibold">
+                    <button">Home</button>
+                </a>
             </div>
             <div class="flex items-center">
                 <button id="toggleSearch" class="text-blue-500 hover:text-blue-700">
@@ -194,25 +196,25 @@
                 <div id="eventList">
                     <!-- Example Event Item 1 -->
                     <div class="event-card">
-                        <img src="../image/event_banner2.png" alt="Event 1" class="event-banner"> <!-- Banner Event 1 -->
+                        <img src="image/event_banner2.png" alt="Event 1" class="event-banner"> <!-- Banner Event 1 -->
                         <div class="event-details">
                             <h3 class="text-xl font-bold">Event 1</h3>
                             <p>Date: Nov 12, 2024</p>
                             <p>Location: New York</p>
                             <p>Description: This is the first event showcasing amazing new technology.</p>
-                            <button class="see-detail-btn">See Detail</button>
+                            <a href="superadmin_detail_event.php"><button class="see-detail-btn">See Detail</button></a>
                         </div>
                     </div>
 
                     <!-- Example Event Item 2 -->
                     <div class="event-card">
-                        <img src="../image/videotron_semnas.png" alt="Event 2" class="event-banner"> <!-- Banner Event 2 -->
+                        <img src="image/videotron_semnas.png" alt="Event 2" class="event-banner"> <!-- Banner Event 2 -->
                         <div class="event-details">
                             <h3 class="text-xl font-bold">Event 2</h3>
                             <p>Date: Dec 5, 2024</p>
                             <p>Location: San Francisco</p>
                             <p>Description: Join us for an exciting seminar on national development.</p>
-                            <button class="see-detail-btn">See Detail</button>
+                            <a href="superadmin_detail_event.php"><button class="see-detail-btn">See Detail</button></a>
                         </div>
                     </div>
                 </div>
@@ -223,7 +225,7 @@
     <!-- Footer Section -->
     <footer class="flex justify-between items-center mt-12 ml-64">
         <div class="flex items-center">
-            <img src="../image/polines_logo.png" alt="Polines Logo" class="h-12 mr-2">
+            <img src="image/polines_logo.png" alt="Polines Logo" class="h-12 mr-2">
             <span class="font-semibold text-lg">Polivent</span>
         </div>
         <div class="text-right">
