@@ -16,6 +16,3 @@ TEXT 1
 
 TEXT 2
 
-# Links to the example headings above
-
-LINK CSS: [Tailwind](#[text](https://tailwindcss.com/)).
