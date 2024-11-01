@@ -39,32 +39,46 @@
   <!-- JavaScript for form submission -->
   <script>
     document.getElementById('signinForm').addEventListener('submit', async (event) => {
-      event.preventDefault(); // Prevent form from submitting the usual way
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const signInButton = event.submitter; // Button to disable during loading
 
-      try {
-        const response = await fetch('/auth.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email, password })
-        });
+  signInButton.disabled = true; // Disable button to prevent multiple requests
+  signInButton.textContent = 'Signing in...';
 
-        const data = await response.json();
-
-        if (data.status === 'success') {
-          alert('Login successful!');
-          window.location.href = '/superadmin_dashboard.php'; // Replace with the desired URL
-        } else {
-          alert(data.message); // Display error message
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Login failed. Please try again.');
-      }
+  try {
+    const response = await fetch('auth.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
+
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      alert('Login successful!');
+      window.location.href = '/superadmin_dashboard.php';
+    } else {
+      displayError(data.message); // Inline error display
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    displayError('Login failed. Please try again.');
+  } finally {
+    signInButton.disabled = false;
+    signInButton.textContent = 'SIGN IN';
+  }
+  });
+
+  function displayError(message) {
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'text-red-500 text-sm mb-4';
+    errorContainer.textContent = message;
+    const form = document.getElementById('signinForm');
+    form.insertBefore(errorContainer, form.firstChild);
+}
+;
   </script>
 </body>
 </html>
