@@ -44,7 +44,7 @@
       const password = document.getElementById('password').value;
 
       try {
-        const response = await fetch('path/to/auth_routes.php', {
+        const response = await fetch('/auth.php', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
