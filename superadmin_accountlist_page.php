@@ -4,86 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Dashboard</title>
+    <title>Available Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Sidebar hover styles */
-        #sidebar {
-            transition: width 0.3s;
-        }
-
-        #sidebar:hover {
-            width: 16rem; /* Width when hovered */
-        }
-        html, body {
-            height: 100%; /* Pastikan tinggi 100% */
-            margin: 0; /* Hapus margin default */
-        }
-
-        body {
-            display: flex; /* Gunakan flexbox */
-            flex-direction: column; /* Susun elemen secara vertikal */
-        }
-        .search-bar {
-            max-width: 0;
-            opacity: 0;
-            transition: max-width 0.5s ease, opacity 0.5s ease;
-            overflow: hidden;
-            padding: 0 0;
-        }
-
-        .search-bar-visible {
-            max-width: 300px;
-            opacity: 1;
-            padding: 0 10px;
-        }
-
-        #sidebar:not(:hover) {
-            width: 5rem; /* Width when not hovered */
-        }
-
-        .sidebar-item {
-            display: none;
-        }
-
-        #sidebar:hover .sidebar-item {
-            display: block;
-        }
-
-        .divider {
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.5);
-            margin: 2rem 0;
-        }
-
-        .scroll-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 1rem 0;
-            scrollbar-width: none;
-        }
-
-        .scroll-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .event-card {
-            min-width: 250px;
-            margin-right: 1rem;
-        }
-        .main-content {
-            flex: 1; /* Buat konten utama mengambil sisa ruang */
-        }
-
-        footer {
-            background-color: #2C3E50;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-            width: 100%; /* Pastikan footer memenuhi lebar */
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100">

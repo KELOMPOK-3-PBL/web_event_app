@@ -31,7 +31,7 @@
                 </a>
             </li>
             <li class="mb-4">
-                <a href="#" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+                <a href="superadmin_approval_page.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
                     <img src="image/logo_approval.png" alt="Approval" class="w-6 h-6">
                     <span>Approval</span>
                 </a>
