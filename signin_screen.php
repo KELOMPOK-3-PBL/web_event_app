@@ -56,7 +56,7 @@
 
         if (data.status === 'success') {
           alert('Login successful!');
-          window.location.href = '/dashboard'; // Replace with the desired URL
+          window.location.href = '/superadmin_dashboard.php'; // Replace with the desired URL
         } else {
           alert(data.message); // Display error message
         }
