@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="../js/available_events.js"></script> <!-- Include the available_events.js file -->
 </head>
 
 <body>
@@ -38,54 +39,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
+                        <!-- Rows will be populated here by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -97,12 +51,17 @@
 
     <!-- Inisialisasi DataTables -->
     <script>
-    $(document).ready(function() {
+    document.addEventListener('DOMContentLoaded', async () => {
+        const eventsUrl = 'http://localhost:80/pbl/api-03/routes/available_events.php'; // Your API URL
+        const events = await fetchEvents(eventsUrl);
+        populateEventTable(events);
+
+        // Initialize DataTables after populating the table
         $('#eventTable').DataTable({
             "columnDefs": [
                 { "orderable": false, "targets": 0 } // Nonaktifkan sorting pada kolom No
             ],
-            "order": [[ 1, 'asc' ]], // Urutkan berdasarkan kolom Name secara default
+            "order": [[ 1, 'asc' ]], // Urutkan berdasarkan kolom Judul Event secara default
             "paging": true, // Aktifkan pagination
             "lengthChange": true, // Aktifkan pilihan jumlah data per halaman
             "pageLength": 5, // Set jumlah data per halaman awalnya
@@ -121,6 +80,6 @@
             });
         }).draw();
     });
-</script>
+    </script>
 </body>
 </html>
