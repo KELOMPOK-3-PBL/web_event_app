@@ -15,10 +15,10 @@
 
 <body>
     <!-- Sidebar -->
-    <?php include 'component/sidebar.php'; ?>
+    <?php include '../component/sidebar_propose.php'; ?>
 
     <!-- Header -->
-    <?php include 'component/header.php'; ?>
+    <?php include '../component/header_propose.php'; ?>
 
     <!-- Main Content -->
     <div class="ml-64 p-8 mt-[120px]">
@@ -44,7 +44,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -52,7 +52,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -60,7 +60,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -68,7 +68,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -76,7 +76,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -84,7 +84,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <td><a href="#">Cek Event</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -93,7 +93,7 @@
     </div>
 
     <!-- Footer -->
-    <?php include 'component/footer.php'; ?>
+    <?php include '../component/footer.php'; ?>
 
     <!-- Inisialisasi DataTables -->
     <script>

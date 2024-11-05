@@ -2,8 +2,8 @@
 <header class="w-full h-[120px] mb-6 bg-blue-500 p-4 fixed top-0 left-0 z-20 flex items-center justify-between">
     <div class="flex items-center space-x-4">
         <!-- Logo and Polivent Text -->
-        <a href="superadmin_dashboard.php" class="flex items-center">
-            <img src="image/polines_logo.png" alt="Polines Logo" class="w-20 h-20 object-contain">
+        <a href="admin_dashboard.php" class="flex items-center">
+            <img src="../image/polines_logo.png" alt="Polines Logo" class="w-20 h-20 object-contain">
             <span class="ml-3 text-4xl font-bold text-white">Polivent</span>
         </a>
         <!-- Home Button

@@ -22,10 +22,10 @@
 
 <body>
     <!-- Sidebar -->
-    <?php include 'component/sidebar.php'; ?>
+    <?php include '../component/sidebar_superadmin.php'; ?>
 
     <!-- Header -->
-    <?php include 'component/header.php'; ?>
+    <?php include '../component/header_superadmin.php'; ?>
 
     <div class="ml-64 p-8 mt-[120px]">
     <div class="flex justify-between items-center mb-4">
@@ -39,7 +39,7 @@
             <span class="ml-2 text-lg">Proposed Events</span>
         </div>
         <div class="mt-4 flex items-center justify-between">
-            <a href="link-to-proposed-events.html" class="text-white hover:underline">More info</a>
+            <a href="superadmin_approval_page.php" class="text-white hover:underline">More info</a>
             <i class="fas fa-info-circle"></i>
         </div>
     </div>
@@ -51,7 +51,7 @@
             <span class="ml-2 text-lg">Pending Events</span>
         </div>
         <div class="mt-4 flex items-center justify-between">
-            <a href="link-to-pending-events.html" class="text-white hover:underline">More info</a>
+            <a href="superadmin_approval_page.php" class="text-white hover:underline">More info</a>
             <i class="fas fa-info-circle"></i>
         </div>
     </div>
@@ -63,7 +63,7 @@
             <span class="ml-2 text-lg">Approved Events</span>
         </div>
         <div class="mt-4 flex items-center justify-between">
-            <a href="link-to-approved-events.html" class="text-white hover:underline">More info</a>
+            <a href="superadmin_approval_page.php" class="text-white hover:underline">More info</a>
             <i class="fas fa-info-circle"></i>
         </div>
     </div>
@@ -75,7 +75,7 @@
             <span class="ml-2 text-lg">Rejected Events</span>
         </div>
         <div class="mt-4 flex items-center justify-between">
-            <a href="link-to-rejected-events.html" class="text-white hover:underline">More info</a>
+            <a href="superadmin_approval_page.php" class="text-white hover:underline">More info</a>
             <i class="fas fa-info-circle"></i>
         </div>
     </div>
@@ -84,12 +84,12 @@
     <section class="mt-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-4xl font-semibold">New Proposed Event</h2>
-            <a href="link-to-more-available-events.html" class="text-blue-500 hover:underline">See More</a>
+            <a href="superadmin_approval_page.php" class="text-blue-500 hover:underline">See More</a>
         </div>
         <div class="scroll-container">
             <!-- Event Card -->
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -99,7 +99,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -109,7 +109,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -119,7 +119,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -129,7 +129,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -150,7 +150,7 @@
         <div class="scroll-container">
             <!-- Event Card -->
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -160,7 +160,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -170,7 +170,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -180,7 +180,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -190,7 +190,7 @@
                 </div>
             </a>
             <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="image/videotron_semnas.png" alt="Event" class="rounded mb-4">
+                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
                 <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
                 <div class="mt-4 bg-gray-100 p-4 rounded">
                     <p><strong>Status:</strong> Available</p>
@@ -204,7 +204,7 @@
     </div>
 
     <!-- Footer -->
-    <?php include 'component/footer.php'; ?>
+    <?php include '../component/footer.php'; ?>
 </body>
 
 </html>

@@ -15,10 +15,10 @@
 
 <body>
     <!-- Sidebar -->
-    <?php include 'component/sidebar.php'; ?>
+    <?php include '../component/sidebar_admin.php'; ?>
 
     <!-- Header -->
-    <?php include 'component/header.php'; ?>
+    <?php include '../component/header_admin.php'; ?>
 
     <!-- Main Content -->
     <div class="ml-64 p-8 mt-[120px]">
@@ -34,7 +34,6 @@
                             <th>Kategori</th>
                             <th>Tempat</th>
                             <th>Waktu</th>
-                            <th>Status</th>
                             <th>Detail Informasi</th>
                         </tr>
                     </thead>
@@ -45,8 +44,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Proposed</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -54,8 +52,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Proposed</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -63,8 +60,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Pending</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -72,8 +68,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Pending</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -81,8 +76,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Approved</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -90,26 +84,7 @@
                             <td>Seminar</td>
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
-                            <th>Approved</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <th>Rejected</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <th>Rejected</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Event</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -118,47 +93,34 @@
     </div>
 
     <!-- Footer -->
-    <?php include 'component/footer.php'; ?>
+    <?php include '../component/footer.php'; ?>
 
     <!-- Inisialisasi DataTables -->
     <script>
     $(document).ready(function() {
-    $('#eventTable').DataTable({
-        "columnDefs": [
-            { "orderable": false, "targets": 0 } // Nonaktifkan sorting pada kolom No
-        ],
-        "order": [[ 1, 'asc' ]],
-        "paging": true,
-        "lengthChange": true,
-        "pageLength": 5,
-        "lengthMenu": [ [5, 15, 25, 50], [5, 15, 25, 50] ],
-        "language": {
-            "paginate": {
-                "previous": "Previous",
-                "next": "Next"
+        $('#eventTable').DataTable({
+            "columnDefs": [
+                { "orderable": false, "targets": 0 } // Nonaktifkan sorting pada kolom No
+            ],
+            "order": [[ 1, 'asc' ]], // Urutkan berdasarkan kolom Name secara default
+            "paging": true, // Aktifkan pagination
+            "lengthChange": true, // Aktifkan pilihan jumlah data per halaman
+            "pageLength": 5, // Set jumlah data per halaman awalnya
+            "lengthMenu": [ [5, 15, 25, 50], [5, 15, 25, 50] ], // Pilihan entries menjadi 5, 15, 25, 50
+            "language": {
+                "paginate": {
+                    "previous": "Previous",
+                    "next": "Next"
+                }
             }
-        }
-    }).on('order.dt search.dt', function () {
-        let table = $('#eventTable').DataTable();
-        table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-            cell.innerHTML = i + 1;
-        });
-        table.column(5).nodes().each(function(cell) {
-            const status = cell.innerText.toLowerCase();
-            cell.classList.add('px-2', 'py-1', 'rounded', 'text-center', 'font-bold'); // Tambahkan kelas dasar
-            if (status === 'proposed') {
-                cell.classList.add('bg-blue-500', 'text-white');
-            } else if (status === 'pending') {
-                cell.classList.add('bg-yellow-500', 'text-white');
-            } else if (status === 'approved') {
-                cell.classList.add('bg-green-500', 'text-white');
-            } else if (status === 'rejected') {
-                cell.classList.add('bg-red-500', 'text-white');
-            }
-        });
-    }).draw();
-});
-
+        }).on('order.dt search.dt', function () {
+            // Tambahkan nomor urut pada kolom No secara dinamis
+            let table = $('#eventTable').DataTable();
+            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
 </script>
 </body>
 </html>
