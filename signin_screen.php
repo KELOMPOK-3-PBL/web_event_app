@@ -19,7 +19,8 @@
     <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg relative z-10">
       <h2 class="text-2xl font-bold text-center mb-6">SIGN IN</h2>
       
-      <form>
+      <!-- Tambahkan ID "signinForm" di sini -->
+      <form id="signinForm">
         <!-- Input untuk Email -->
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
@@ -54,7 +55,7 @@
 
         <!-- Tombol SIGN IN -->
         <div class="mb-4">
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">SIGN IN</button>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">SIGN IN</button>
         </div>
       </form>
     </div>
@@ -72,7 +73,7 @@
       signInButton.textContent = 'Signing in...';
 
       try {
-        const response = await fetch('http://localhost:80/pbl/api-03/routes/auth.php', {
+        const response = await fetch('http://localhost:80/web_event_app/api-03/routes/auth.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -82,7 +83,7 @@
 
         if (data.status === 'success') {
           alert('Login successful!');
-          window.location.href = 'http://localhost:80/pbl/web_event_app/superadmin_page/superadmin_dashboard.php';
+          window.location.href = 'http://localhost:80/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
         } else {
           displayError(data.message); // Inline error display
         }

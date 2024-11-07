@@ -52,7 +52,7 @@
     <!-- Inisialisasi DataTables -->
     <script>
     document.addEventListener('DOMContentLoaded', async () => {
-        const eventsUrl = 'http://localhost:80/pbl/api-03/routes/available_events.php'; // Your API URL
+        const eventsUrl = 'http://localhost:80/web_event_app/api-03/routes/available_events.php'; // Your API URL
         const events = await fetchEvents(eventsUrl);
         populateEventTable(events);
 
