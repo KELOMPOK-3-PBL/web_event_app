@@ -36,7 +36,9 @@ function populateEventTable(events) {
                 <td>${event.category}</td>
                 <td>${event.location}</td>
                 <td>${event.date_start} - ${event.date_end}</td>
-                <td class="text-center"><a href="#">Cek Event</a></td>
+                <td class="text-center">
+                    <a href="superadmin_detail_event.php?id=${event.event_id}">Cek Event</a>
+                </td>
             </tr>
         `;
         tableBody.insertAdjacentHTML('beforeend', row); // Sisipkan baris baru
