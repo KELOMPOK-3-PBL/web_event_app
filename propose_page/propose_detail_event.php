@@ -11,10 +11,10 @@
 
 <body>
     <!-- Sidebar -->
-    <?php include '../component/sidebar_superadmin.php'; ?>
+    <?php include '../component/sidebar_propose.php'; ?>
 
     <!-- Header -->
-    <?php include '../component/header_superadmin.php'; ?>
+    <?php include '../component/header_propose.php'; ?>
 
     <!-- Main Content Wrapper -->
     <div class="ml-64 mt-[120px] p-8">

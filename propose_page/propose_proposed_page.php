@@ -46,7 +46,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Proposed</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -55,7 +55,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Proposed</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -64,7 +64,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Pending</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -73,7 +73,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Pending</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -82,7 +82,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Approved</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -91,7 +91,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Approved</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -100,7 +100,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Rejected</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                         <tr>
                             <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
@@ -109,7 +109,7 @@
                             <td>GKT Lt. 2</td>
                             <td>12 Desember 2024</td>
                             <th>Rejected</th>
-                            <td class="text-center"><a href="#">Cek Event / tambahkan note</a></td>
+                            <td class="text-center"><a href="#">Cek Proposed Event</a></td>
                         </tr>
                     </tbody>
                 </table>
