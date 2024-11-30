@@ -65,7 +65,7 @@
             "paging": true, // Aktifkan pagination
             "lengthChange": true, // Aktifkan pilihan jumlah data per halaman
             "pageLength": 5, // Set jumlah data per halaman awalnya
-            "lengthMenu": [ [5, 15, 25, 50], [5, 15, 25, 50] ], // Pilihan entries menjadi 5, 15, 25, 50
+            "lengthMenu": [ [5, 10, 15], [5, 10, 15] ], // Pilihan entries menjadi 5, 15, 25, 50
             "language": {
                 "paginate": {
                     "previous": "Previous",

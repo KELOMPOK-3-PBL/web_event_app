@@ -48,83 +48,121 @@
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 
-    <!-- JavaScript for AJAX and DataTables -->
     <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        var table = $('#accountTable').DataTable({
-            "columnDefs": [
-                { "orderable": false, "targets": 0 } // Disable sorting on "No" column
-            ],
-            "order": [[ 1, 'asc' ]],
-            "paging": true,
-            "lengthChange": true,
-            "pageLength": 5,
-            "lengthMenu": [ [5, 15, 25, 50], [5, 15, 25, 50] ],
-            "language": {
-                "paginate": {
-                    "previous": "Previous",
-                    "next": "Next"
-                }
-            }
+document.addEventListener('DOMContentLoaded', async () => {
+    const usersUrl = 'http://localhost:80/web_event_app/api-03/routes/users.php';
+
+    // Fungsi untuk mengambil data pengguna
+    async function fetchUsers(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Failed to fetch users');
+            const result = await response.json();
+            return result.data; // Hanya bagian data
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+
+    // Fungsi untuk mengisi tabel akun
+    function populateAccountTable(users) {
+        const table = $('#accountTable').DataTable();
+        table.clear(); // Bersihkan tabel sebelum mengisi data baru
+
+        users.forEach((user, index) => {
+            const roles = user.roles.split(','); // Pecah string roles menjadi array
+            table.row.add([
+                index + 1, // Kolom No
+                user.email, // Nama pengguna
+                roles.join(', '), // Gabungkan roles kembali jika diperlukan
+                `<div class="flex justify-center space-x-2">
+                    <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600" onclick="changeRole(${user.user_id})">Change Role</button>
+                    <button class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600" onclick="deleteAccount(${user.user_id})">Delete</button>
+                </div>`
+            ]);
         });
 
-        // Function to load user data
-        function loadUserData() {
-            $.ajax({
-                url: 'http://localhost:80/web_event_app/api-03/routes/users.php', // URL to your user API
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    // Clear existing data in table
-                    table.clear();
+        table.draw(); // Render ulang tabel
+    }
 
-                    // Populate table with new data
-                    $.each(data, function(index, user) {
-                        table.row.add([
-                            index + 1, // No column
-                            user.username,
-                            user.roles.join(', '), // Assuming 'roles' is an array
-                            `<div class="flex justify-center space-x-2">
-                                <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600" onclick="editUser(${user.id})">Edit role</button>
-                                <button class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600" onclick="deleteUser(${user.id})">Delete</button>
-                            </div>`
-                        ]).draw();
-                    });
+    // Fungsi untuk mengubah role pengguna
+    window.changeRole = function(userId) {
+        const newRole = prompt('Enter new role for this user (e.g., Member,Admin):');
+        if (newRole) {
+            fetch(usersUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-                error: function() {
-                    console.error('Failed to load user data.');
-                }
-            });
-        }
-
-        // Load user data initially
-        loadUserData();
-
-        // Edit user function
-        window.editUser = function(userId) {
-            // Example edit function (you could open a modal for editing)
-            alert('Edit user with ID: ' + userId);
-            // Implement actual edit functionality here
-        };
-
-        // Delete user function
-        window.deleteUser = function(userId) {
-            if (confirm('Are you sure you want to delete this user?')) {
-                $.ajax({
-                    url: 'http://localhost:80/web_event_app/api-03/routes/users.php?user_id=' + userId,
-                    method: 'DELETE',
-                    success: function(response) {
-                        alert('User deleted successfully.');
-                        loadUserData(); // Reload data after delete
-                    },
-                    error: function() {
-                        alert('Failed to delete user.');
+                body: JSON.stringify({
+                    user_id: userId,
+                    roles: newRole,
+                }),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert('Role updated successfully.');
+                        loadUsers(); // Muat ulang data
+                    } else {
+                        throw new Error('Failed to update role');
                     }
+                })
+                .catch((error) => {
+                    alert(error.message);
                 });
-            }
-        };
+        }
+    };
+
+    // Fungsi untuk menghapus akun pengguna
+    window.deleteAccount = function(userId) {
+        if (confirm('Are you sure you want to delete this account?')) {
+            fetch(`${usersUrl}?user_id=${userId}`, {
+                method: 'DELETE',
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        alert('Account deleted successfully.');
+                        loadUsers(); // Muat ulang data
+                    } else {
+                        throw new Error('Failed to delete account');
+                    }
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        }
+    };
+
+    // Fungsi untuk memuat data pengguna
+    async function loadUsers() {
+        const users = await fetchUsers(usersUrl);
+        populateAccountTable(users);
+    }
+
+    // Inisialisasi DataTables
+    $('#accountTable').DataTable({
+        columnDefs: [
+            { orderable: false, targets: 0 }, // Nonaktifkan sorting pada kolom No
+            { orderable: false, targets: 3 }, // Nonaktifkan sorting pada kolom Action
+        ],
+        order: [[1, 'asc']],
+        paging: true,
+        lengthChange: true,
+        pageLength: 5,
+        lengthMenu: [[5, 10, 15], [5, 10, 15]],
+        language: {
+            paginate: {
+                previous: 'Previous',
+                next: 'Next',
+            },
+        },
     });
-    </script>
+
+    // Muat data awal
+    loadUsers();
+});
+
+</script>
 </body>
 </html>

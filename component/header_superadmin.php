@@ -12,7 +12,7 @@
         </a> -->
     </div>
     
-    <!-- Search Bar -->
+    <!-- Search Bar
     <div class="flex items-center">
         <button id="toggleSearch" class="text-white">
             <i class="fas fa-search"></i>
@@ -20,7 +20,7 @@
         <div id="searchBar" class="flex items-center ml-2">
             <input type="text" placeholder="Search..." class="border p-2 rounded">
         </div>
-    </div>
+    </div> -->
 </header>
 
 <script>

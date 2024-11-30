@@ -46,9 +46,40 @@
 
     <!-- Sidebar Footer -->
     <div>
-        <a href="../signin_screen.php" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
+        <a href="#" id="logout-button" class="flex items-center space-x-2 hover:bg-blue-600 p-2 rounded">
             <i class="fas fa-sign-out-alt"></i>
             <span>Log Out</span>
         </a>
     </div>
 </div>
+
+<script>
+    document.getElementById('logout-button').addEventListener('click', function (e) {
+    e.preventDefault(); // Mencegah navigasi langsung
+
+    // Kirim permintaan DELETE ke endpoint logout
+    fetch('http://localhost:80/web_event_app/api-03/routes/auth.php', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: 'logout' // Menambahkan parameter action untuk logout
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Jika logout berhasil, redirect ke halaman login
+            alert(data.message); // Menampilkan pesan logout sukses
+            window.location.href = '../signin_screen.php'; // Arahkan ke halaman login
+        } else {
+            alert('Logout failed: ' + data.message); // Jika ada error saat logout
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred during logout.'); // Menangani kesalahan lainnya
+    });
+});
+</script>

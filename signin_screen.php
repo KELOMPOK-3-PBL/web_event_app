@@ -73,7 +73,7 @@
       signInButton.textContent = 'Signing in...';
 
       try {
-        const response = await fetch('http://localhost:80/web_event_app/api-03/routes/auth.php', {
+        const response = await fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -83,7 +83,7 @@
 
         if (data.status === 'success') {
           alert('Login successful!');
-          window.location.href = 'http://localhost:80/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
+          window.location.href = 'http://localhost/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
         } else {
           displayError(data.message); // Inline error display
         }
