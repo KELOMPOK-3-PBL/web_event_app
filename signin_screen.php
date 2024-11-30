@@ -62,47 +62,123 @@
   </div>
 
   <!-- JavaScript for form submission -->
-  <script>
-    document.getElementById('signinForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const signInButton = event.submitter;
+   <script>
+  // Fungsi untuk mendekode JWT
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
 
-      signInButton.disabled = true; // Disable button to prevent multiple requests
-      signInButton.textContent = 'Signing in...';
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+}
 
-      try {
-        const response = await fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
+// Event listener untuk form submit
+document.getElementById('signinForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const signInButton = event.submitter;
 
-        const data = await response.json();
+  signInButton.disabled = true; // Disable button to prevent multiple requests
+  signInButton.textContent = 'Signing in...';
 
-        if (data.status === 'success') {
-          alert('Login successful!');
-          window.location.href = 'http://localhost/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
-        } else {
-          displayError(data.message); // Inline error display
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        displayError('Login failed. Please try again.');
-      } finally {
-        signInButton.disabled = false;
-        signInButton.textContent = 'SIGN IN';
-      }
+  try {
+    const response = await fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
 
-    function displayError(message) {
-      const errorContainer = document.createElement('div');
-      errorContainer.className = 'text-red-500 text-sm mb-4';
-      errorContainer.textContent = message;
-      const form = document.getElementById('signinForm');
-      form.insertBefore(errorContainer, form.firstChild);
+    const data = await response.json();
+
+    if (data.status === 'success') {
+      const token = data.data.token;
+      localStorage.setItem('token', token);
+      const decoded = parseJwt(token); // Memanggil fungsi parseJwt untuk mendekode token
+
+      console.log('Decoded roles:', decoded.roles); // Tambahkan log untuk mengecek roles
+
+      const roles = decoded.roles; // Array of roles like ["admin", "superadmin"]
+
+      // Jika lebih dari satu role, tampilkan tombol untuk memilih role
+      if (roles.length > 1) {
+        displayRoleButtons(roles); // Menampilkan tombol pemilihan role
+      } else if (roles.length === 1) {
+        redirectToDashboard(roles[0]); // Langsung ke dashboard jika hanya satu role
+      } else {
+        displayError('No role found.');
+      }
+    } else {
+      displayError(data.message); // Inline error display
     }
-  </script>
+  } catch (error) {
+    console.error('Error:', error);
+    displayError('Login failed. Please try again.');
+  } finally {
+    signInButton.disabled = false;
+    signInButton.textContent = 'SIGN IN';
+  }
+});
+
+// Fungsi untuk menampilkan tombol untuk memilih role
+function displayRoleButtons(roles) {
+  const roleSelectionContainer = document.createElement('div');
+  roleSelectionContainer.className = 'text-center mt-4';
+
+  roles.forEach(role => {
+    const button = document.createElement('button');
+    button.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mx-2';
+    button.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    button.addEventListener('click', () => {
+      console.log('Role selected:', role); // Tambahkan log untuk melihat role yang dipilih
+      redirectToDashboard(role);
+    });
+    roleSelectionContainer.appendChild(button);
+  });
+
+  // Menampilkan tombol di dalam form
+  const form = document.getElementById('signinForm');
+  form.appendChild(roleSelectionContainer);
+}
+
+// Fungsi untuk mengarahkan pengguna ke dashboard berdasarkan role
+function redirectToDashboard(role) {
+  console.log('Redirecting to dashboard for role:', role); // Tambahkan log untuk melihat role yang diterima
+  if (role === 'Superadmin') {
+    window.location.href = 'http://localhost/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
+  } else if (role === 'Admin') {
+    window.location.href = 'http://localhost/web_event_app/web_event_app/admin_page/admin_dashboard.php';
+  } else if (role === 'Propose') {
+    window.location.href = 'http://localhost/web_event_app/web_event_app/propose_page/propose_dashboard.php';
+  } else if (role === 'Member') {
+    window.location.href = 'http://localhost/web_event_app/web_event_app/member_page/member_dashboard.php';
+  } else {
+    displayError('No dashboard assigned for your role.');
+  }
+}
+
+// Fungsi untuk menampilkan pesan error
+function displayError(message) {
+  const errorContainer = document.querySelector('#signinForm .text-red-500');
+  if (errorContainer) {
+    errorContainer.textContent = message;
+  } else {
+    const newError = document.createElement('div');
+    newError.className = 'text-red-500 text-sm mb-4';
+    newError.textContent = message;
+    const form = document.getElementById('signinForm');
+    form.insertBefore(newError, form.firstChild);
+  }
+}
+</script>
+
+
 </body>
 </html>

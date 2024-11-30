@@ -1,20 +1,21 @@
-<!-- sidebar.php -->
 <div id="sidebar" class="bg-blue-500 w-64 h-screen fixed left-0 top-0 flex flex-col justify-between p-4 text-white z-10">
     <div>
 
         <!-- Divider -->
         <div class="border-t border-white/50 my-8 mt-[105px]"></div>
-         <!-- My Profile Section -->
-         <div class="flex items-center mb-6">
+
+        <!-- My Profile Section -->
+        <div class="flex items-center mb-6">
             <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-500 font-bold">
                 <span>U</span>
             </div>
             <div class="ml-3">
                 <a href="superadmin_profile.php" class="text-lg font-semibold">
-                    <p>Username123</p>
+                    <p id="username">Username123</p> <!-- Username yang akan diubah -->
                 </a>
             </div>
         </div>
+
         <!-- Menu Items -->
         <ul>
             <li class="mb-4">
@@ -54,11 +55,44 @@
 </div>
 
 <script>
-    document.getElementById('logout-button').addEventListener('click', function (e) {
+// Fungsi untuk mengambil data pengguna
+async function getUserData() {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        console.log('No token found');
+        return;
+    }
+
+    // Kirim request untuk mendapatkan data pengguna berdasarkan token
+    const response = await fetch('http://localhost:80/pbl/api-03/routes/users.php?user_id=10', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`  // Kirim token dengan header Authorization
+        },
+    });
+
+    const result = await response.json();
+
+    if (result.status === 'success') {
+        // Menampilkan username di halaman
+        document.getElementById('username').innerText = result.data.username;  // Menampilkan username
+    } else {
+        console.log('Failed to fetch user data:', result.message);
+    }
+}
+
+// Panggil fungsi getUserData saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    getUserData();
+});
+
+// Logout functionality
+document.getElementById('logout-button').addEventListener('click', function (e) {
     e.preventDefault(); // Mencegah navigasi langsung
 
     // Kirim permintaan DELETE ke endpoint logout
-    fetch('http://localhost:80/web_event_app/api-03/routes/auth.php', {
+    fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',

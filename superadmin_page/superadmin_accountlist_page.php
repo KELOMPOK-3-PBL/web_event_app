@@ -48,6 +48,34 @@
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 
+    <!-- Modal untuk mengubah role -->
+<div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 hidden">
+    <div class="bg-white p-6 rounded-lg w-96">
+        <h3 class="text-lg font-semibold mb-4">Change Roles</h3>
+        <form id="roleForm">
+            <div>
+                <label class="block">
+                    <input type="checkbox" id="role_member" class="mr-2"> Member
+                </label>
+                <label class="block">
+                    <input type="checkbox" id="role_propose" class="mr-2"> Propose
+                </label>
+                <label class="block">
+                    <input type="checkbox" id="role_admin" class="mr-2"> Admin
+                </label>
+                <label class="block">
+                    <input type="checkbox" id="role_superadmin" class="mr-2"> Superadmin
+                </label>
+            </div>
+            <div class="mt-4 flex justify-between">
+                <button type="button" onclick="closeRoleModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
     <script>
 document.addEventListener('DOMContentLoaded', async () => {
     const usersUrl = 'http://localhost:80/web_event_app/api-03/routes/users.php';
@@ -86,53 +114,97 @@ document.addEventListener('DOMContentLoaded', async () => {
         table.draw(); // Render ulang tabel
     }
 
-    // Fungsi untuk mengubah role pengguna
-    window.changeRole = function(userId) {
-        const newRole = prompt('Enter new role for this user (e.g., Member,Admin):');
-        if (newRole) {
-            fetch(usersUrl, {
-                method: 'PUT',
+    // Fungsi untuk mengubah role pengguna dengan checkbox
+window.changeRole = function(userId) {
+    // Ambil elemen checkbox dari modal
+    const roleModal = document.getElementById('roleModal');
+    const roleForm = document.getElementById('roleForm');
+
+    // Reset checkbox
+    document.getElementById('role_member').checked = false;
+    document.getElementById('role_propose').checked = false;
+    document.getElementById('role_admin').checked = false;
+    document.getElementById('role_superadmin').checked = false;
+
+    // Tampilkan modal
+    roleModal.classList.remove('hidden');
+    
+    // Kirim data userId melalui data modal
+    roleForm.onsubmit = async function(event) {
+        event.preventDefault(); // Mencegah form submit default
+
+        const selectedRoles = [];
+        
+        // Cek role yang terpilih
+        if (document.getElementById('role_member').checked) selectedRoles.push('member');
+        if (document.getElementById('role_propose').checked) selectedRoles.push('propose');
+        if (document.getElementById('role_admin').checked) selectedRoles.push('admin');
+        if (document.getElementById('role_superadmin').checked) selectedRoles.push('superadmin');
+        
+        if (selectedRoles.length === 0) {
+            alert('Please select at least one role.');
+            return;
+        }
+
+        // Kirim permintaan update role ke server
+        try {
+            const response = await fetch(usersUrl, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     user_id: userId,
-                    roles: newRole,
+                    roles: selectedRoles.join(','),
                 }),
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        alert('Role updated successfully.');
-                        loadUsers(); // Muat ulang data
-                    } else {
-                        throw new Error('Failed to update role');
-                    }
-                })
-                .catch((error) => {
-                    alert(error.message);
-                });
+            });
+
+            if (response.ok) {
+                alert('Roles updated successfully.');
+                loadUsers(); // Muat ulang data pengguna
+                closeRoleModal(); // Tutup modal
+            } else {
+                throw new Error('Failed to update roles');
+            }
+        } catch (error) {
+            alert(error.message);
         }
     };
+};
+
+// Fungsi untuk menutup modal
+function closeRoleModal() {
+    const roleModal = document.getElementById('roleModal');
+    console.log('Closing modal:', roleModal.style.display);  // Cek status modal
+    if (roleModal) {
+        roleModal.style.display = 'none';  // Tutup modal
+    } else {
+        console.error('Modal element not found!');
+    }
+}
 
     // Fungsi untuk menghapus akun pengguna
-    window.deleteAccount = function(userId) {
-        if (confirm('Are you sure you want to delete this account?')) {
-            fetch(`${usersUrl}?user_id=${userId}`, {
-                method: 'DELETE',
-            })
-                .then((response) => {
-                    if (response.ok) {
-                        alert('Account deleted successfully.');
-                        loadUsers(); // Muat ulang data
-                    } else {
-                        throw new Error('Failed to delete account');
-                    }
-                })
-                .catch((error) => {
-                    alert(error.message);
-                });
-        }
-    };
+window.deleteAccount = function(userId) {
+    if (confirm('Are you sure you want to delete this account?')) {
+        // Perbarui URL dengan user_id yang sesuai
+        const deleteUrl = `http://localhost:80/pbl/api-03/routes/users.php?user_id=${userId}`;
+        
+        fetch(deleteUrl, {
+            method: 'DELETE',  // Menggunakan metode DELETE
+        })
+        .then((response) => {
+            if (response.ok) {
+                alert('Account deleted successfully.');
+                loadUsers(); // Muat ulang data pengguna
+            } else {
+                throw new Error('Failed to delete account');
+            }
+        })
+        .catch((error) => {
+            alert(error.message);
+        });
+    }
+};
 
     // Fungsi untuk memuat data pengguna
     async function loadUsers() {
