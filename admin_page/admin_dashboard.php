@@ -31,113 +31,17 @@
     <div class="flex justify-between items-center mb-4">
             <h2 class="text-4xl font-semibold">Dashboard</h2>
     </div>
-    <div class="flex space-x-4 mt-8">
-    <!-- Proposed Event Card -->
-    <div class="bg-blue-500 text-white p-6 rounded-lg w-1/4">
-        <div class="flex items-center">
-            <span class="text-4xl font-bold">150</span>
-            <span class="ml-2 text-lg">Proposed Events</span>
-        </div>
-        <div class="mt-4 flex items-center justify-between">
-            <a href="admin_approval_page.php" class="text-white hover:underline">More info</a>
-            <i class="fas fa-info-circle"></i>
-        </div>
+    <div class="flex space-x-4 mt-8" id="event-cards">
+    <!-- Card event akan dinamis di sini -->
     </div>
-
-    <!-- Pending Event Card -->
-    <div class="bg-yellow-500 text-white p-6 rounded-lg w-1/4">
-        <div class="flex items-center">
-            <span class="text-4xl font-bold">53</span>
-            <span class="ml-2 text-lg">Pending Events</span>
-        </div>
-        <div class="mt-4 flex items-center justify-between">
-            <a href="admin_approval_page.php" class="text-white hover:underline">More info</a>
-            <i class="fas fa-info-circle"></i>
-        </div>
-    </div>
-
-    <!-- Approved Event Card -->
-    <div class="bg-green-500 text-white p-6 rounded-lg w-1/4">
-        <div class="flex items-center">
-            <span class="text-4xl font-bold">44</span>
-            <span class="ml-2 text-lg">Approved Events</span>
-        </div>
-        <div class="mt-4 flex items-center justify-between">
-            <a href="admin_approval_page.php" class="text-white hover:underline">More info</a>
-            <i class="fas fa-info-circle"></i>
-        </div>
-    </div>
-
-    <!-- Rejected Event Card -->
-    <div class="bg-red-500 text-white p-6 rounded-lg w-1/4">
-        <div class="flex items-center">
-            <span class="text-4xl font-bold">65</span>
-            <span class="ml-2 text-lg">Rejected Events</span>
-        </div>
-        <div class="mt-4 flex items-center justify-between">
-            <a href="admin_approval_page.php" class="text-white hover:underline">More info</a>
-            <i class="fas fa-info-circle"></i>
-        </div>
-    </div>
-    </div>
-    <!-- New Proposed Event Section -->
+    
     <section class="mt-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-4xl font-semibold">New Proposed Event</h2>
             <a href="admin_approval_page.php" class="text-blue-500 hover:underline">See More</a>
         </div>
-        <div class="scroll-container">
-            <!-- Event Card -->
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
+        <div id="new-proposed-events-container" class="scroll-container">
+            <!-- Kartu event akan di-generate di sini -->
         </div>
     </section>
 
@@ -147,64 +51,129 @@
             <h2 class="text-4xl font-semibold">Available Event</h2>
             <a href="admin_event_page.php" class="text-blue-500 hover:underline">See More</a>
         </div>
-        <div class="scroll-container">
-            <!-- Event Card -->
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
-            <a href="link-to-business-plan-competition.html" class="bg-white rounded-lg shadow-lg p-4 event-card">
-                <img src="../image/videotron_semnas.png" alt="Event" class="rounded mb-4">
-                <h3 class="text-lg font-semibold">Competition: Business Plan</h3>
-                <div class="mt-4 bg-gray-100 p-4 rounded">
-                    <p><strong>Status:</strong> Available</p>
-                    <p><strong>Location:</strong> GKT VII/05</p>
-                    <p><strong>Date:</strong> 23-25 July 2023</p>
-                    <p><strong>Time:</strong> 09:00 - 10:00</p>
-                </div>
-            </a>
+        <div id="available-events-container" class="scroll-container">
+            <!-- Event Cards akan di-generate di sini -->
         </div>
     </section>
+
     </div>
 
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 </body>
+<script>
+// Fetch jumlah event berdasarkan status
+fetch('http://localhost/web_event_app/api-03/routes/events_count.php', {
+})
+.then(response => response.json())
+.then(data => {
+    if (data.status === 'success') {
+        // Ambil data jumlah event
+        const eventData = data.data;
 
+        // Elemen container untuk menampung card
+        const eventCardsContainer = document.getElementById('event-cards');
+        
+        // Data status event untuk di-loop dan ditampilkan
+        const eventStatuses = [
+            { name: 'Proposed', color: 'bg-blue-500' },
+            { name: 'Pending', color: 'bg-yellow-500' },
+            { name: 'Approved', color: 'bg-green-500' },
+            { name: 'Rejected', color: 'bg-red-500' },
+            { name: 'Reviewing', color: 'bg-[#D2B48C]' }, // Card for Reviewing with color #D2B48C
+            { name: 'Completed', color: 'bg-[#FFD700]' } // Card for Completed with color #FFD700
+        ];
+
+        // Loop untuk setiap status yang diperlukan
+        eventStatuses.forEach(status => {
+            const statusData = eventData.find(event => event.status_name === status.name);
+            const eventCount = statusData ? statusData.event_count : 0; // Jika tidak ada data, set ke 0
+
+            // Membuat card dinamis untuk setiap status
+            const card = document.createElement('div');
+            card.classList.add(status.color, 'text-white', 'p-6', 'rounded-lg', 'w-1/4');
+
+            card.innerHTML = `
+                <div class="flex items-center">
+                    <span class="text-4xl font-bold">${eventCount}</span>
+                    <span class="ml-2 text-lg">${status.name} Events</span>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <a href="admin_approval_page.php" class="text-white hover:underline">More info</a>
+                    <i class="fas fa-info-circle"></i>
+                </div>
+            `;
+
+            // Menambahkan card ke container
+            eventCardsContainer.appendChild(card);
+        });
+    }
+});
+
+// Fetch data event dari API
+fetch('http://localhost/web_event_app/api-03/routes/events.php')
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success' && Array.isArray(data.data)) {
+            // Filter berdasarkan status
+            const approvedEvents = data.data.filter(event => event.status === 'Approved');
+            const newProposedEvents = data.data.filter(event => event.status !== 'Approved' && event.status !== 'Completed');
+
+            // Urutkan newProposedEvents berdasarkan status dan waktu
+            const statusOrder = ['Proposed', 'Reviewing', 'Pending', 'Rejected'];
+            newProposedEvents.sort((a, b) => {
+                // Urutkan berdasarkan status terlebih dahulu
+                const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+                if (statusComparison !== 0) return statusComparison;
+
+                // Jika status sama, urutkan berdasarkan waktu (terbaru lebih dulu)
+                return new Date(b.date_add) - new Date(a.date_add);
+            });
+
+            // Tampilkan event sesuai kategori
+            displayEvents(approvedEvents, 'available-events-container');
+            displayEvents(newProposedEvents, 'new-proposed-events-container');
+        } else {
+            console.error('Failed to fetch events:', data.message);
+        }
+    })
+    .catch(error => console.error('Error fetching events:', error));
+
+// Fungsi untuk menampilkan daftar event
+function displayEvents(events, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ''; // Kosongkan kontainer
+
+    if (events.length === 0) {
+        container.innerHTML = '<p class="text-gray-500">No events available.</p>';
+        return;
+    }
+
+    events.forEach(event => {
+        const eventCard = document.createElement('a');
+        eventCard.className = 'bg-white rounded-lg shadow-lg p-4 event-card';
+        eventCard.href = `admin_detail_event.php?event_id=${event.event_id}`;
+        eventCard.innerHTML = `
+            <img src="${event.poster}" alt="${event.title}" class="w-80 h-80 rounded mb-4">
+            <h3 class="text-lg font-semibold">${event.title}</h3>
+            <p class="text-sm text-gray-600 mb-2"><strong>Category:</strong> ${event.category}</p>
+            <div class="mt-4 bg-gray-100 p-4 rounded">
+                <p><strong>Status:</strong> ${event.status}</p>
+                <p><strong>Location:</strong> ${event.location} - ${event.place}</p>
+                <p><strong>Date:</strong> ${formatDate(event.date_start)} - ${formatDate(event.date_end)}</p>
+                <p><strong>Quota:</strong> ${event.quota}</p>
+                <p><strong>Description:</strong> ${event.description}</p>
+            </div>
+        `;
+        container.appendChild(eventCard);
+    });
+}
+
+// Fungsi untuk memformat tanggal
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, options);
+}
+</script>
 </html>

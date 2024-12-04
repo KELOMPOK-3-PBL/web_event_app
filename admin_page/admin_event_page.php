@@ -38,54 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
-                        <tr>
-                            <td></td> <!-- Nomor otomatis akan diisi oleh DataTables -->
-                            <td>Techomfest</td>
-                            <td>Seminar</td>
-                            <td>GKT Lt. 2</td>
-                            <td>12 Desember 2024</td>
-                            <td class="text-center"><a href="#">Cek Event</a></td>
-                        </tr>
+                        <!-- Rows will be populated here by JavaScript -->
                     </tbody>
                 </table>
             </div>
@@ -97,30 +50,73 @@
 
     <!-- Inisialisasi DataTables -->
     <script>
-    $(document).ready(function() {
-        $('#eventTable').DataTable({
-            "columnDefs": [
-                { "orderable": false, "targets": 0 } // Nonaktifkan sorting pada kolom No
-            ],
-            "order": [[ 1, 'asc' ]], // Urutkan berdasarkan kolom Name secara default
-            "paging": true, // Aktifkan pagination
-            "lengthChange": true, // Aktifkan pilihan jumlah data per halaman
-            "pageLength": 5, // Set jumlah data per halaman awalnya
-            "lengthMenu": [ [5, 15, 25, 50], [5, 15, 25, 50] ], // Pilihan entries menjadi 5, 15, 25, 50
-            "language": {
-                "paginate": {
-                    "previous": "Previous",
-                    "next": "Next"
-                }
+document.addEventListener('DOMContentLoaded', async () => {
+    const eventsUrl = 'http://localhost:80/web_event_app/api-03/routes/available_events.php'; // URL API
+    const events = await fetchEvents(eventsUrl); // Ambil data acara
+    populateEventTable(events); // Tampilkan data ke tabel
+
+    // Inisialisasi DataTables setelah mengisi tabel
+    $('#eventTable').DataTable({
+        "columnDefs": [
+            { "orderable": false, "targets": 0 } // Nonaktifkan sorting pada kolom No
+        ],
+        "order": [[ 1, 'asc' ]], // Urutkan berdasarkan kolom Judul Event secara default
+        "paging": true, // Aktifkan pagination
+        "lengthChange": true, // Aktifkan pilihan jumlah data per halaman
+        "pageLength": 5, // Set jumlah data per halaman awalnya
+        "lengthMenu": [ [5, 10, 15], [5, 10, 15] ], // Pilihan entries menjadi 5, 10, 15
+        "language": {
+            "paginate": {
+                "previous": "Previous",
+                "next": "Next"
             }
-        }).on('order.dt search.dt', function () {
-            // Tambahkan nomor urut pada kolom No secara dinamis
-            let table = $('#eventTable').DataTable();
-            table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
+        }
+    }).on('order.dt search.dt', function () {
+        // Tambahkan nomor urut pada kolom No secara dinamis
+        let table = $('#eventTable').DataTable();
+        table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+});
+
+// Fungsi untuk mengambil data acara dari API
+async function fetchEvents(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.status === 'success') {
+            return data.data; // Return data acara jika status 'success'
+        } else {
+            console.error('Failed to fetch events:', data.message);
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        return [];
+    }
+}
+
+// Fungsi untuk memasukkan data acara ke dalam tabel
+function populateEventTable(events) {
+    const tableBody = document.querySelector('#eventTable tbody');
+    tableBody.innerHTML = ''; // Kosongkan tabel sebelumnya
+
+    events.forEach(event => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td></td>
+            <td>${event.title}</td>
+            <td>${event.category}</td>
+            <td>${event.place}</td>
+            <td>${new Date(event.date_start).toLocaleString()}</td>
+            <td class="text-center">
+                <a href="admin_detail_event.php?event_id=${event.event_id}" class="text-blue-600 hover:text-blue-800">Cek Event</a>
+            </td>
+        `;
+        tableBody.appendChild(row);
     });
+}
 </script>
 </body>
 </html>

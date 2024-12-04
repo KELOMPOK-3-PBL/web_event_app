@@ -1,3 +1,12 @@
+<?php
+// Tangkap event_id dari URL
+if (isset($_GET['event_id'])) {
+    $event_id = $_GET['event_id'];
+} else {
+    // Jika event_id tidak ditemukan, arahkan ke halaman lain atau tampilkan pesan error
+    die("Event ID tidak ditemukan.");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -97,5 +106,64 @@
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 </body>
+<script>
+    // Tangkap event_id dari URL menggunakan JavaScript
+const urlParams = new URLSearchParams(window.location.search);
+const eventId = urlParams.get('event_id');
+console.log("Event ID:", eventId); // Verifikasi ID yang diterima
 
+// Fungsi untuk memuat data event
+function loadEventDetails(eventId) {
+    // Ganti dengan endpoint API Anda
+    const apiEndpoint = `http://localhost:80/web_event_app/api-03/routes/available_events.php?event_id=${eventId}`;
+
+    fetch(apiEndpoint)
+        .then(response => response.json())
+        .then(data => {
+            // Jika data ditemukan, isi form dengan data tersebut
+            if (data.status === 'success' && data.data) {
+                const event = data.data; // Ambil event dari objek data
+
+                // Isi form dengan data event
+                document.getElementById('title').value = event.title || '';
+                document.getElementById('category').value = event.category || '';
+                document.getElementById('location').value = `${event.location} - ${event.place}` || '';
+                document.getElementById('audience').value = event.quota || '';
+                document.getElementById('datetime').value = formatDateTime(event.date_start); // Format datetime untuk input datetime-local
+                document.getElementById('description').value = event.description || '';
+
+                // Update tautan download poster
+                const posterLink = document.querySelector('a[href="path/to/qr-code.png"]');
+                posterLink.href = event.poster;
+                posterLink.download = `poster-${event.event_id}.jpg`; // Sesuaikan dengan ekstensi file yang benar
+
+                // Update tautan download QR Code (jika ada field QR code)
+                const qrCodeLink = document.querySelector('a[href="path/to/qr-code.png"]');
+                qrCodeLink.href = event.qr_code || '#'; // Sesuaikan dengan field dari API Anda jika ada QR code
+                qrCodeLink.download = `qr-code-${event.event_id}.png`;
+            } else {
+                alert('Event tidak ditemukan.');
+            }
+        })
+        .catch(error => console.error('Error fetching event data:', error));
+}
+
+
+// Panggil fungsi loadEventDetails dengan eventId
+if (eventId) {
+    loadEventDetails(eventId);
+} else {
+    alert('Event ID tidak ditemukan.');
+}
+
+function formatDateTime(inputDate) {
+    // Pisahkan tanggal dan waktu
+    const [date, time] = inputDate.split(' ');
+    // Pisahkan bagian waktu (jam:menit:detik)
+    const [hour, minute] = time.split(':');
+
+    // Gabungkan menjadi format yang sesuai untuk input datetime-local
+    return `${date}T${hour}:${minute}`;
+}
+</script>
 </html>

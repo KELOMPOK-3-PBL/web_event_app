@@ -50,22 +50,37 @@
     <?php include '../component/footer.php'; ?>
 
     <!-- Inisialisasi DataTables -->
-    <script>
+<script>
     $(document).ready(function () {
     // Konsumsi API
-    const apiUrl = 'http://localhost:80/web_event_app/api-03/routes/events.php?admin_user_id=10';
-    // id ne masih statis
-    
+    const apiUrl = 'http://localhost:80/web_event_app/api-03/routes/events.php';
+
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
                 const events = data.data;
+
+                // Filter events berdasarkan status (exclude Approved)
+                const newProposedEvents = events.filter(event => event.status !== 'Approved');
+
+                // Urutkan newProposedEvents berdasarkan status dan waktu
+                const statusOrder = ['Proposed', 'Reviewing', 'Pending', 'Rejected', 'Completed'];
+                newProposedEvents.sort((a, b) => {
+                    // Urutkan berdasarkan status
+                    const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+                    if (statusComparison !== 0) return statusComparison;
+
+                    // Jika status sama, urutkan berdasarkan waktu (paling baru lebih dahulu)
+                    return new Date(b.date_add) - new Date(a.date_add);
+                });
+
+                // Inisialisasi DataTable
                 const table = $('#eventTable').DataTable({
                     columnDefs: [
                         { orderable: false, targets: 0 } // Nonaktifkan sorting pada kolom No
                     ],
-                    order: [[1, 'asc']], // Urutkan berdasarkan kolom kedua (Judul Event)
+                    order: [], // Tidak perlu default order
                     paging: true,
                     lengthChange: true,
                     pageLength: 5,
@@ -78,14 +93,14 @@
                     },
                 });
 
-                // Tambahkan data ke tabel
-                events.forEach((event, index) => {
+                // Tambahkan data yang sudah terurut ke tabel
+                newProposedEvents.forEach((event, index) => {
                     table.row.add([
                         '', // Kolom No (akan diperbarui nanti)
                         event.title,
                         event.category,
                         `${event.location}, ${event.place}`,
-                        `${event.date_start} - ${event.date_end}`,
+                        `${formatDate(event.date_start)} - ${formatDate(event.date_end)}`,
                         event.status,
                         `<a href="detail_event.html?event_id=${event.event_id}" class="text-blue-500 underline">View Details</a>`
                     ]);
@@ -102,10 +117,13 @@
                         cell.classList.add('bg-blue-500', 'text-white');
                     } else if (status === 'pending') {
                         cell.classList.add('bg-yellow-500', 'text-white');
-                    } else if (status === 'approved') {
-                        cell.classList.add('bg-green-500', 'text-white');
                     } else if (status === 'rejected') {
                         cell.classList.add('bg-red-500', 'text-white');
+                    } else if (status === 'completed') {
+                        cell.classList.add('bg-green-500', 'text-white');
+                    } else if (status === 'reviewing') { // Duplikasi, tidak perlu
+                        cell.style.backgroundColor = '#D2B48C'; // Oranye untuk reviewing
+                        cell.style.color = '#ffffff'; // Teks putih
                     }
                 });
 
@@ -122,7 +140,12 @@
         .catch(error => console.error('Error fetching data:', error));
 });
 
-
+// Fungsi untuk memformat tanggal ke format lebih mudah dibaca
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleString(undefined, options);
+}
 </script>
 </body>
 </html>

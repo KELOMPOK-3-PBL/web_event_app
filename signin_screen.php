@@ -100,8 +100,8 @@ document.getElementById('signinForm').addEventListener('submit', async (event) =
 
     if (data.status === 'success') {
       const token = data.data.token;
-      localStorage.setItem('token', token);
-      const decoded = parseJwt(token); // Memanggil fungsi parseJwt untuk mendekode token
+      const decoded = parseJwt(token); // Dekode JWT
+      localStorage.setItem('username', decoded.username); // Menyimpan username
 
       console.log('Decoded roles:', decoded.roles); // Tambahkan log untuk mengecek roles
 

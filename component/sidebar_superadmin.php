@@ -11,7 +11,7 @@
             </div>
             <div class="ml-3">
                 <a href="superadmin_profile.php" class="text-lg font-semibold">
-                    <p id="username">Username123</p> <!-- Username yang akan diubah -->
+                    <p id="username">Loading ...</p> <!-- Username yang akan diubah -->
                 </a>
             </div>
         </div>
@@ -55,37 +55,67 @@
 </div>
 
 <script>
-// Fungsi untuk mengambil data pengguna
-async function getUserData() {
-    const token = localStorage.getItem('token');
+// Ambil token dari localStorage
+const token = localStorage.getItem('token');
+
+// Mengecek apakah token ada
+if (token) {
+    // Dekode token untuk mendapatkan user_id
+    const decodedToken = parseJwt(token);
     
-    if (!token) {
-        console.log('No token found');
-        return;
+    if (decodedToken && decodedToken.user_id) {
+        const userId = decodedToken.user_id;  // Mendapatkan user_id dari token
+
+        // Membuat permintaan ke endpoint menggunakan Bearer token dan user_id yang dinamis
+        fetch(`http://localhost/web_event_app/api-03/routes/users.php?user_id=${userId}`, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
     }
+})
+.then(response => response.json())
+.then(data => {
+    console.log('API Response:', data); // Log respons API untuk debugging
+    if (data.status === 'success') {
+        // Ambil username dari data yang diterima
+        const username = data.data.username;
 
-    // Kirim request untuk mendapatkan data pengguna berdasarkan token
-    const response = await fetch('http://localhost:80/pbl/api-03/routes/users.php?user_id=10', {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`  // Kirim token dengan header Authorization
-        },
-    });
-
-    const result = await response.json();
-
-    if (result.status === 'success') {
-        // Menampilkan username di halaman
-        document.getElementById('username').innerText = result.data.username;  // Menampilkan username
+        // Menampilkan username di elemen dengan ID 'username'
+        document.getElementById('username').textContent = username;
     } else {
-        console.log('Failed to fetch user data:', result.message);
+        console.error('Error:', data.message);
+        document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika error
     }
+})
+.catch(error => {
+    console.error('Request failed:', error);
+    document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika gagal
+});
+    } else {
+        console.error('User ID not found in token.');
+        document.getElementById('username').textContent = 'Guest'; // Tampilkan sebagai 'Guest' jika token tidak valid
+    }
+} else {
+    console.error('Token is missing.');
+    document.getElementById('username').textContent = 'Guest'; // Tampilkan sebagai 'Guest' jika tidak ada token
 }
 
-// Panggil fungsi getUserData saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    getUserData();
-});
+// Fungsi untuk mendekode JWT
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }
+}
 
 // Logout functionality
 document.getElementById('logout-button').addEventListener('click', function (e) {
@@ -104,6 +134,10 @@ document.getElementById('logout-button').addEventListener('click', function (e) 
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
+            // Menghapus username dan token dari localStorage
+            localStorage.removeItem('username');
+            // localStorage.removeItem('token'); // Hapus token juga
+            
             // Jika logout berhasil, redirect ke halaman login
             alert(data.message); // Menampilkan pesan logout sukses
             window.location.href = '../signin_screen.php'; // Arahkan ke halaman login
