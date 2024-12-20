@@ -55,23 +55,15 @@
 </div>
 
 <script>
-// Ambil token dari localStorage
-const token = localStorage.getItem('token');
+// Mengambil token dari localStorage
+const token = localStorage.getItem('jwt');
 
-// Mengecek apakah token ada
-if (token) {
-    // Dekode token untuk mendapatkan user_id
-    const decodedToken = parseJwt(token);
-    
-    if (decodedToken && decodedToken.user_id) {
-        const userId = decodedToken.user_id;  // Mendapatkan user_id dari token
-
-        // Membuat permintaan ke endpoint menggunakan Bearer token dan user_id yang dinamis
-        fetch(`http://localhost/web_event_app/api-03/routes/users.php?user_id=${userId}`, {
+// Memanggil API tanpa pengecekan token terlebih dahulu
+fetch('http://localhost/pbl/api-03/routes/auth.php', {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}` // Meskipun token tidak dicek, tetap akan diteruskan
     }
 })
 .then(response => response.json())
@@ -83,6 +75,9 @@ if (token) {
 
         // Menampilkan username di elemen dengan ID 'username'
         document.getElementById('username').textContent = username;
+
+        // Menyimpan username ke localStorage jika diperlukan
+        localStorage.setItem('username', username);
     } else {
         console.error('Error:', data.message);
         document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika error
@@ -92,37 +87,13 @@ if (token) {
     console.error('Request failed:', error);
     document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika gagal
 });
-    } else {
-        console.error('User ID not found in token.');
-        document.getElementById('username').textContent = 'Guest'; // Tampilkan sebagai 'Guest' jika token tidak valid
-    }
-} else {
-    console.error('Token is missing.');
-    document.getElementById('username').textContent = 'Guest'; // Tampilkan sebagai 'Guest' jika tidak ada token
-}
-
-// Fungsi untuk mendekode JWT
-function parseJwt(token) {
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return null;
-    }
-}
 
 // Logout functionality
 document.getElementById('logout-button').addEventListener('click', function (e) {
     e.preventDefault(); // Mencegah navigasi langsung
 
     // Kirim permintaan DELETE ke endpoint logout
-    fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
+    fetch('http://localhost/pbl/api-03/routes/auth.php', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -136,7 +107,7 @@ document.getElementById('logout-button').addEventListener('click', function (e) 
         if (data.status === 'success') {
             // Menghapus username dan token dari localStorage
             localStorage.removeItem('username');
-            // localStorage.removeItem('token'); // Hapus token juga
+            localStorage.removeItem('jwt'); // Hapus token juga
             
             // Jika logout berhasil, redirect ke halaman login
             alert(data.message); // Menampilkan pesan logout sukses

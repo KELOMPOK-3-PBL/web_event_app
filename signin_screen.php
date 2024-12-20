@@ -90,7 +90,7 @@ document.getElementById('signinForm').addEventListener('submit', async (event) =
   signInButton.textContent = 'Signing in...';
 
   try {
-    const response = await fetch('http://localhost/web_event_app/api-03/routes/auth.php', {
+    const response = await fetch('http://localhost/pbl/api-03/routes/auth.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -101,10 +101,9 @@ document.getElementById('signinForm').addEventListener('submit', async (event) =
     if (data.status === 'success') {
       const token = data.data.token;
       const decoded = parseJwt(token); // Dekode JWT
+      localStorage.setItem('jwt', token);
       localStorage.setItem('username', decoded.username); // Menyimpan username
-
-      console.log('Decoded roles:', decoded.roles); // Tambahkan log untuk mengecek roles
-
+      localStorage.setItem('roles', JSON.stringify(decoded.roles));
       const roles = decoded.roles; // Array of roles like ["admin", "superadmin"]
 
       // Jika lebih dari satu role, tampilkan tombol untuk memilih role
@@ -152,13 +151,13 @@ function displayRoleButtons(roles) {
 function redirectToDashboard(role) {
   console.log('Redirecting to dashboard for role:', role); // Tambahkan log untuk melihat role yang diterima
   if (role === 'Superadmin') {
-    window.location.href = 'http://localhost/web_event_app/web_event_app/superadmin_page/superadmin_dashboard.php';
+    window.location.href = 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php';
   } else if (role === 'Admin') {
-    window.location.href = 'http://localhost/web_event_app/web_event_app/admin_page/admin_dashboard.php';
+    window.location.href = 'http://localhost/pbl/web_event_app/admin_page/admin_dashboard.php';
   } else if (role === 'Propose') {
-    window.location.href = 'http://localhost/web_event_app/web_event_app/propose_page/propose_dashboard.php';
+    window.location.href = 'http://localhost/pbl/web_event_app/propose_page/propose_dashboard.php';
   } else if (role === 'Member') {
-    window.location.href = 'http://localhost/web_event_app/web_event_app/member_page/member_dashboard.php';
+    window.location.href = 'http://localhost/pbl/web_event_app/member_page/member_dashboard.php';
   } else {
     displayError('No dashboard assigned for your role.');
   }
@@ -178,7 +177,5 @@ function displayError(message) {
   }
 }
 </script>
-
-
 </body>
 </html>

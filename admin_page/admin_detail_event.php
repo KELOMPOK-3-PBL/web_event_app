@@ -15,6 +15,7 @@ if (isset($_GET['event_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
@@ -68,11 +69,11 @@ if (isset($_GET['event_id'])) {
                     <textarea id="description" class="w-full border rounded px-4 py-2" rows="4" placeholder="Event description..."></textarea>
                 </div>
 
-                <!-- poster download Section -->
+                <!-- Poster Download Section -->
                 <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2" for="qrCodeDownload">Download Poster</label>
+                    <label class="block text-gray-700 font-semibold mb-2" for="posterDownload">Download Poster</label>
                     <!-- Tombol download poster -->
-                    <a href="path/to/qr-code.png" download="qr-code.png" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg inline-block">
+                    <a href="path/to/qr-code.png" id="posterLink" download="qr-code.png" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg inline-block">
                         Download Poster
                     </a>
                 </div>
@@ -81,16 +82,10 @@ if (isset($_GET['event_id'])) {
                 <div class="mb-6">
                     <label class="block text-gray-700 font-semibold mb-2" for="qrCodeDownload">Download QR Code</label>
                     <!-- Tombol download QR Code -->
-                    <a href="path/to/qr-code.png" download="qr-code.png" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg inline-block">
+                    <button type="button" id="downloadQRBtn" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg inline-block">
                         Download QR Code
-                    </a>
+                    </button>
                 </div>
-
-                <!-- Note Section tidak pake not karena ini detail event
-                <div class="mb-6">
-                    <label class="block text-gray-700 font-semibold mb-2" for="note">Note :</label>
-                    <textarea id="note" class="w-full border rounded px-4 py-2 bg-gray-100" rows="4" placeholder="Additional notes..."></textarea>
-                </div> -->
 
                 <!-- Buttons -->
                 <!-- Exit Button -->
@@ -106,6 +101,7 @@ if (isset($_GET['event_id'])) {
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 </body>
+
 <script>
     // Tangkap event_id dari URL menggunakan JavaScript
 const urlParams = new URLSearchParams(window.location.search);
@@ -133,20 +129,36 @@ function loadEventDetails(eventId) {
                 document.getElementById('description').value = event.description || '';
 
                 // Update tautan download poster
-                const posterLink = document.querySelector('a[href="path/to/qr-code.png"]');
-                posterLink.href = event.poster;
-                posterLink.download = `poster-${event.event_id}.jpg`; // Sesuaikan dengan ekstensi file yang benar
+                const posterLink = document.getElementById('posterLink');
+                posterLink.href = event.poster || '#'; // Sesuaikan dengan field poster dari API
+                posterLink.download = `poster-${event.event_id}.jpg`; // Nama file poster yang akan diunduh
 
-                // Update tautan download QR Code (jika ada field QR code)
-                const qrCodeLink = document.querySelector('a[href="path/to/qr-code.png"]');
-                qrCodeLink.href = event.qr_code || '#'; // Sesuaikan dengan field dari API Anda jika ada QR code
-                qrCodeLink.download = `qr-code-${event.event_id}.png`;
+                // Update QR Code button untuk mendownload QR Code
+                const qrCodeData = `event_id=${event.event_id}`;
+                document.getElementById('downloadQRBtn').onclick = function() {
+                    generateAndDownloadQRCode(qrCodeData, event.event_id);
+                };
+
             } else {
                 alert('Event tidak ditemukan.');
             }
         })
         .catch(error => console.error('Error fetching event data:', error));
 }
+
+// Fungsi untuk menghasilkan dan mendownload QR Code
+function generateAndDownloadQRCode(data, eventId) {
+    const qr = qrcode(4, 'L'); // Level koreksi kesalahan 'L'
+    qr.addData(data);
+    qr.make();
+
+    // Membuat elemen anchor untuk download
+    const link = document.createElement('a');
+    link.href = qr.createDataURL();
+    link.download = `qr-code-${eventId}.png`; // Nama file download
+    link.click(); // Memulai proses download
+}
+
 
 
 // Panggil fungsi loadEventDetails dengan eventId
@@ -166,4 +178,5 @@ function formatDateTime(inputDate) {
     return `${date}T${hour}:${minute}`;
 }
 </script>
+
 </html>

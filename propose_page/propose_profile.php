@@ -32,12 +32,12 @@
                 <!-- Profile Details -->
                 <div class="w-3/4 px-6">
                     <!-- Username -->
-                <div class="flex justify-between items-center mb-4">
-                    <h1 class="text-3xl font-bold">Username123</h1> <!-- Username -->
-                </div>
-                <div>
-                    <h3>Logged in as Propose</h3>
-                </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h1 id="usernamee" class="text-3xl font-bold">Guest</h1> <!-- Username -->
+                    </div>
+                    <div>
+                        <h3 id="role">Logged in as Role</h3> <!-- Role -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,5 +46,47 @@
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 </body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Endpoint API
+    const apiURL = "http://localhost/pbl/api-03/routes/auth.php";
+    const token = localStorage.getItem("jwt");
 
+    // Pastikan token tersedia
+    if (!token) {
+        console.error("No token found in localStorage. Please login first.");
+        // Redirect to login page or show error
+        return;
+    }
+
+    // Ambil data dari API
+    fetch(apiURL, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Kirim token jika tersedia
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === "success") {
+                // Isi data ke dalam elemen DOM
+                document.getElementById("usernamee").textContent = data.data.username;
+                document.getElementById("role").textContent = `Logged in as ${data.data.role_name}`;
+            } else {
+                console.error("API response status not success:", data.message);
+                // Tampilkan error pada UI jika diperlukan
+            }
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            // Tampilkan error pada UI jika diperlukan
+        });
+});
+</script>
 </html>

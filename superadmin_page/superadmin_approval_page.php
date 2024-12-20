@@ -53,19 +53,26 @@
 <script>
     $(document).ready(function () {
     // Konsumsi API
-    const apiUrl = 'http://localhost:80/web_event_app/api-03/routes/events.php';
+    const apiUrl = 'http://localhost:80/pbl/api-03/routes/events.php';
+    const token = localStorage.getItem('jwt');
 
-    fetch(apiUrl)
+    fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Meskipun token tidak dicek, tetap akan diteruskan
+            }
+        })
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
                 const events = data.data;
 
                 // Filter events berdasarkan status (exclude Approved)
-                const newProposedEvents = events.filter(event => event.status !== 'Approved');
+                const newProposedEvents = events.filter(event => event.status !== 'Review Admin');
 
                 // Urutkan newProposedEvents berdasarkan status dan waktu
-                const statusOrder = ['Proposed', 'Reviewing', 'Pending', 'Rejected', 'Completed'];
+                const statusOrder = ['Proposed', 'Revision Propose', 'Approved', 'Rejected', 'Completed'];
                 newProposedEvents.sort((a, b) => {
                     // Urutkan berdasarkan status
                     const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
@@ -102,7 +109,7 @@
                         `${event.location}, ${event.place}`,
                         `${formatDate(event.date_start)} - ${formatDate(event.date_end)}`,
                         event.status,
-                        `<a href="detail_event.html?event_id=${event.event_id}" class="text-blue-500 underline">View Details</a>`
+                        `<a href="superadmin_edit_event.php?event_id=${event.event_id}" class="text-blue-500 hover:text-blue-800">View details</a>`
                     ]);
                 });
 
@@ -115,14 +122,17 @@
                     cell.className = 'px-2 py-1 rounded text-center font-bold'; // Reset kelas sebelumnya
                     if (status === 'proposed') {
                         cell.classList.add('bg-blue-500', 'text-white');
-                    } else if (status === 'pending') {
+                    } else if (status === 'review admin') {
                         cell.classList.add('bg-yellow-500', 'text-white');
                     } else if (status === 'rejected') {
                         cell.classList.add('bg-red-500', 'text-white');
-                    } else if (status === 'completed') {
+                    } else if (status === 'approved') {
                         cell.classList.add('bg-green-500', 'text-white');
-                    } else if (status === 'reviewing') { // Duplikasi, tidak perlu
+                    } else if (status === 'revision propose') { // Duplikasi, tidak perlu
                         cell.style.backgroundColor = '#D2B48C'; // Oranye untuk reviewing
+                        cell.style.color = '#ffffff'; // Teks putih
+                    } else if (status === 'completed') { // Duplikasi, tidak perlu
+                        cell.style.backgroundColor = '#FFD700'; // Oranye untuk reviewing
                         cell.style.color = '#ffffff'; // Teks putih
                     }
                 });

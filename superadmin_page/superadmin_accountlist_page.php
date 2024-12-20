@@ -75,23 +75,42 @@
     </div>
 </div>
 
-
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', async () => {
-    const usersUrl = 'http://localhost:80/web_event_app/api-03/routes/users.php';
+    const usersUrl = 'http://localhost/pbl/api-03/routes/users.php';
+    const postUrl = 'http://localhost/pbl/api-03/routes/users.php?user_id=${user_id}';
+    const token = localStorage.getItem('jwt'); // Ambil token
 
     // Fungsi untuk mengambil data pengguna
     async function fetchUsers(url) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to fetch users');
-            const result = await response.json();
-            return result.data; // Hanya bagian data
-        } catch (error) {
-            console.error(error);
-            return [];
+    try {
+
+        if (!token) {
+            alert('Authorization token not found. Please log in.');
+            return; // Hentikan eksekusi jika token tidak ditemukan
         }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`, // Tambahkan Bearer Token
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch users');
+        }
+
+        const result = await response.json();
+        return result.data || []; // Pastikan hanya mengembalikan data
+    } catch (error) {
+        console.error('Error fetching users:', error.message);
+        alert(`Error: ${error.message}`);
+        return [];
     }
+}
 
     // Fungsi untuk mengisi tabel akun
     function populateAccountTable(users) {
@@ -99,7 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         table.clear(); // Bersihkan tabel sebelum mengisi data baru
 
         users.forEach((user, index) => {
-            const roles = user.roles.split(','); // Pecah string roles menjadi array
+            const roles = user.roles ? user.roles.split(',') : []; // Pecah string roles menjadi array
             table.row.add([
                 index + 1, // Kolom No
                 user.email, // Nama pengguna
@@ -115,79 +134,74 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Fungsi untuk mengubah role pengguna dengan checkbox
-window.changeRole = function(userId) {
-    // Ambil elemen checkbox dari modal
+    window.changeRole = function(userId) {
+    if (!userId || isNaN(userId)) {
+        alert('Invalid user ID.');
+        return;
+    }
+
     const roleModal = document.getElementById('roleModal');
     const roleForm = document.getElementById('roleForm');
 
     // Reset checkbox
-    document.getElementById('role_member').checked = false;
-    document.getElementById('role_propose').checked = false;
-    document.getElementById('role_admin').checked = false;
-    document.getElementById('role_superadmin').checked = false;
+    ['role_member', 'role_propose', 'role_admin', 'role_superadmin'].forEach(id => {
+        document.getElementById(id).checked = false;
+    });
 
     // Tampilkan modal
     roleModal.classList.remove('hidden');
-    
-    // Kirim data userId melalui data modal
+
     roleForm.onsubmit = async function(event) {
-        event.preventDefault(); // Mencegah form submit default
+    event.preventDefault();
 
-        const selectedRoles = [];
-        
-        // Cek role yang terpilih
-        if (document.getElementById('role_member').checked) selectedRoles.push('member');
-        if (document.getElementById('role_propose').checked) selectedRoles.push('propose');
-        if (document.getElementById('role_admin').checked) selectedRoles.push('admin');
-        if (document.getElementById('role_superadmin').checked) selectedRoles.push('superadmin');
-        
-        if (selectedRoles.length === 0) {
-            alert('Please select at least one role.');
-            return;
+    const selectedRoles = [];
+    if (document.getElementById('role_member').checked) selectedRoles.push(1);
+    if (document.getElementById('role_propose').checked) selectedRoles.push(2);
+    if (document.getElementById('role_admin').checked) selectedRoles.push(3);
+    if (document.getElementById('role_superadmin').checked) selectedRoles.push(4);
+
+    if (selectedRoles.length === 0) {
+        alert('Please select at least one role.');
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('jwt'); // Ambil token
+        const response = await fetch(postUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ user_id: userId, roles: selectedRoles.join(',') }),
+        });
+
+        if (response.ok) {
+            alert('Roles updated successfully.');
+            loadUsers();
+            closeRoleModal();
+        } else {
+            throw new Error('Failed to update roles');
         }
+    } catch (error) {
+        alert(error.message);
+        // window.location.reload(); // Refresh halaman
+    }
+};
 
-        // Kirim permintaan update role ke server
-        try {
-            const response = await fetch(usersUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    roles: selectedRoles.join(','),
-                }),
-            });
-
-            if (response.ok) {
-                alert('Roles updated successfully.');
-                loadUsers(); // Muat ulang data pengguna
-                closeRoleModal(); // Tutup modal
-            } else {
-                throw new Error('Failed to update roles');
-            }
-        } catch (error) {
-            alert(error.message);
-        }
-    };
 };
 
 // Fungsi untuk menutup modal
 function closeRoleModal() {
     const roleModal = document.getElementById('roleModal');
-    console.log('Closing modal:', roleModal.style.display);  // Cek status modal
-    if (roleModal) {
-        roleModal.style.display = 'none';  // Tutup modal
-    } else {
-        console.error('Modal element not found!');
-    }
+    roleModal.classList.add('hidden'); // Tutup modal
 }
 
     // Fungsi untuk menghapus akun pengguna
 window.deleteAccount = function(userId) {
     if (confirm('Are you sure you want to delete this account?')) {
         // Perbarui URL dengan user_id yang sesuai
-        const deleteUrl = `http://localhost:80/pbl/api-03/routes/users.php?user_id=${userId}`;
+        const deleteUrl = `http://localhost/pbl/api-03/routes/users.php?user_id=${userId}`;
         
         fetch(deleteUrl, {
             method: 'DELETE',  // Menggunakan metode DELETE
@@ -206,17 +220,15 @@ window.deleteAccount = function(userId) {
     }
 };
 
-    // Fungsi untuk memuat data pengguna
-    async function loadUsers() {
-        const users = await fetchUsers(usersUrl);
-        populateAccountTable(users);
-    }
+async function loadUsers() {
+    const users = await fetchUsers(usersUrl);
+    populateAccountTable(users);
 
-    // Inisialisasi DataTables
+    // Inisialisasi DataTables setelah data diisi
     $('#accountTable').DataTable({
         columnDefs: [
-            { orderable: false, targets: 0 }, // Nonaktifkan sorting pada kolom No
-            { orderable: false, targets: 3 }, // Nonaktifkan sorting pada kolom Action
+            { orderable: false, targets: 0 },
+            { orderable: false, targets: 3 },
         ],
         order: [[1, 'asc']],
         paging: true,
@@ -230,7 +242,7 @@ window.deleteAccount = function(userId) {
             },
         },
     });
-
+}
     // Muat data awal
     loadUsers();
 });

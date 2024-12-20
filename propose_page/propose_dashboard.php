@@ -45,7 +45,7 @@
 </body>
 <script>
 // Fetch data event dari API
-fetch('http://localhost/web_event_app/api-03/routes/events.php')
+fetch('http://localhost/pbl/api-03/routes/available_events.php')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success' && Array.isArray(data.data)) {

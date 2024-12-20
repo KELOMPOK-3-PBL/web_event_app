@@ -50,7 +50,7 @@
     <!-- Initialize DataTables -->
     <script>
 document.addEventListener('DOMContentLoaded', async () => {
-    const eventsUrl = 'http://localhost:80/web_event_app/api-03/routes/available_events.php'; // URL API
+    const eventsUrl = 'http://localhost/pbl/api-03/routes/available_events.php'; // URL API
     const events = await fetchEvents(eventsUrl); // Ambil data acara
     populateEventTable(events); // Tampilkan data ke tabel
 

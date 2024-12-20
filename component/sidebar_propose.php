@@ -11,7 +11,7 @@
             </div>
             <div class="ml-3">
                 <a href="propose_profile.php" class="text-lg font-semibold">
-                    <p>Username123</p>
+                    <p id="username">Loading ...</p> <!-- Username yang akan diubah -->
                 </a>
             </div>
         </div>
@@ -54,11 +54,45 @@
 </div>
 
 <script>
-    document.getElementById('logout-button').addEventListener('click', function (e) {
+// Mengambil token dari localStorage
+const token = localStorage.getItem('jwt');
+
+// Memanggil API tanpa pengecekan token terlebih dahulu
+fetch('http://localhost/pbl/api-03/routes/auth.php', {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Meskipun token tidak dicek, tetap akan diteruskan
+    }
+})
+.then(response => response.json())
+.then(data => {
+    console.log('API Response:', data); // Log respons API untuk debugging
+    if (data.status === 'success') {
+        // Ambil username dari data yang diterima
+        const username = data.data.username;
+
+        // Menampilkan username di elemen dengan ID 'username'
+        document.getElementById('username').textContent = username;
+
+        // Menyimpan username ke localStorage jika diperlukan
+        localStorage.setItem('username', username);
+    } else {
+        console.error('Error:', data.message);
+        document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika error
+    }
+})
+.catch(error => {
+    console.error('Request failed:', error);
+    document.getElementById('username').textContent = 'Guest'; // Tampilkan 'Guest' jika gagal
+});
+
+// Logout functionality
+document.getElementById('logout-button').addEventListener('click', function (e) {
     e.preventDefault(); // Mencegah navigasi langsung
 
     // Kirim permintaan DELETE ke endpoint logout
-    fetch('http://localhost:80/web_event_app/api-03/routes/auth.php', {
+    fetch('http://localhost/pbl/api-03/routes/auth.php', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -70,6 +104,10 @@
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
+            // Menghapus username dan token dari localStorage
+            localStorage.removeItem('username');
+            localStorage.removeItem('jwt'); // Hapus token juga
+            
             // Jika logout berhasil, redirect ke halaman login
             alert(data.message); // Menampilkan pesan logout sukses
             window.location.href = '../signin_screen.php'; // Arahkan ke halaman login

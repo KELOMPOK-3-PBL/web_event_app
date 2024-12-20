@@ -63,7 +63,7 @@
 </body>
 <script>
 // Fetch jumlah event berdasarkan status
-fetch('http://localhost/web_event_app/api-03/routes/events_count.php', {
+fetch('http://localhost/pbl/api-03/routes/events_count.php', {
 })
 .then(response => response.json())
 .then(data => {
@@ -77,10 +77,10 @@ fetch('http://localhost/web_event_app/api-03/routes/events_count.php', {
         // Data status event untuk di-loop dan ditampilkan
         const eventStatuses = [
             { name: 'Proposed', color: 'bg-blue-500' },
-            { name: 'Pending', color: 'bg-yellow-500' },
+            { name: 'Review Admin', color: 'bg-yellow-500' },
+            { name: 'Revision Propose', color: 'bg-[#D2B48C]' }, // Card for Reviewing with color #D2B48C
             { name: 'Approved', color: 'bg-green-500' },
             { name: 'Rejected', color: 'bg-red-500' },
-            { name: 'Reviewing', color: 'bg-[#D2B48C]' }, // Card for Reviewing with color #D2B48C
             { name: 'Completed', color: 'bg-[#FFD700]' } // Card for Completed with color #FFD700
         ];
 
@@ -110,19 +110,17 @@ fetch('http://localhost/web_event_app/api-03/routes/events_count.php', {
     }
 });
 
-// Fetch data event dari API
-fetch('http://localhost/web_event_app/api-03/routes/events.php')
+fetch('http://localhost/pbl/api-03/routes/events.php')
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success' && Array.isArray(data.data)) {
             // Filter berdasarkan status
             const approvedEvents = data.data.filter(event => event.status === 'Approved');
-            const newProposedEvents = data.data.filter(event => event.status !== 'Approved' && event.status !== 'Completed');
+            const newProposedEvents = data.data.filter(event => event.status === 'Proposed' || event.status === 'Revision Propose');
 
             // Urutkan newProposedEvents berdasarkan status dan waktu
-            const statusOrder = ['Proposed', 'Reviewing', 'Pending', 'Rejected'];
+            const statusOrder = ['Proposed', 'Revision Propose'];
             newProposedEvents.sort((a, b) => {
-                // Urutkan berdasarkan status terlebih dahulu
                 const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
                 if (statusComparison !== 0) return statusComparison;
 
@@ -152,9 +150,9 @@ function displayEvents(events, containerId) {
     events.forEach(event => {
         const eventCard = document.createElement('a');
         eventCard.className = 'bg-white rounded-lg shadow-lg p-4 event-card';
-        eventCard.href = `superadmin_detail_event.php?event_id=${event.event_id}`;
+        eventCard.href = `superadmin_edit_event.php?event_id=${event.event_id}`;
         eventCard.innerHTML = `
-            <img src="${event.poster}" alt="${event.title}" class="w-80 h-80 rounded mb-4">
+            <img src="http://localhost${event.poster}" alt="${event.title}" class="w-80 h-80 rounded mb-4">
             <h3 class="text-lg font-semibold">${event.title}</h3>
             <p class="text-sm text-gray-600 mb-2"><strong>Category:</strong> ${event.category}</p>
             <div class="mt-4 bg-gray-100 p-4 rounded">
