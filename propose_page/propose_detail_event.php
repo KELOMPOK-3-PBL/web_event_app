@@ -143,7 +143,6 @@ if (isset($_GET['event_id'])) {
 // Tangkap event_id dari URL menggunakan JavaScript
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('event_id');
-console.log("Event ID:", eventId); // Verifikasi ID yang diterima
 
 // Fungsi untuk memuat data event
 async function loadEventDetails(eventId) {
@@ -162,7 +161,6 @@ async function loadEventDetails(eventId) {
             let place = event.place || '';
             let quota = event.quota || '';
             let date_start = event.date_start ? event.date_start.replace(' ', 'T') : '';
-            // let date_end = event.date_end ? event.date_end.replace(' ', 'T') : '';
             let description = event.description || '';
             let note = event.note || '';
 
@@ -173,7 +171,6 @@ async function loadEventDetails(eventId) {
             document.getElementById('place').value = place;
             document.getElementById('quota').value = quota;
             document.getElementById('date_start').value = date_start;
-            // document.getElementById('date_end').value = date_end;
             document.getElementById('description').value = description;
 
             // Poster logic
@@ -201,7 +198,6 @@ async function loadEventDetails(eventId) {
             }
 
             // Set the selected category in the dropdown
-            // Set the selected category in the dropdown
             const categorySelect = document.getElementById('category_id');
             if (categorySelect && event.category) {
                 Array.from(categorySelect.options).forEach(option => {
@@ -211,14 +207,12 @@ async function loadEventDetails(eventId) {
                 });
             }
 
-
             // Update QR code link (assuming you have a qrCode element)
             const qr_id = eventId; // Original data
             const encodedqr_id = btoa(qr_id.toString()); // Base64 encoding
 
             QRCode.toCanvas(document.getElementById('qrcode'), encodedqr_id, function (error) {
                 if (error) console.error(error);
-                console.log('QR Code berhasil dibuat!');
             });
         } else {
             console.error('Failed to fetch event details:', data.message);

@@ -207,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 QRCode.toCanvas(document.getElementById('qrcode'), encodedqr_id, function (error) {
                     if (error) console.error(error);
-                    console.log('QR Code berhasil dibuat!');
                 });
 
                 // Display the event poster if available
@@ -248,11 +247,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // Memeriksa apakah data roles berupa JSON
             roles = JSON.parse(localStorage.getItem('roles'));
         } catch (e) {
-            console.error('Error parsing roles:', e);
             roles = localStorage.getItem('roles'); // Ambil sebagai string jika tidak valid JSON
         }
-
-        console.log('Roles:', roles); // Debugging roles
 
         // Pastikan bahwa token ada di localStorage
         const token = localStorage.getItem('jwt');
@@ -303,8 +299,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        console.log('FormData:', formData); // Debugging FormData yang akan dikirim
-
         try {
             const response = await fetch(`http://localhost/pbl/api-03/routes/events.php?event_id=${eventId}`, {
                 method: 'POST',
@@ -317,16 +311,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 const result = await response.json();
                 alert('Event berhasil diedit!!');
-                console.log(result); // Debugging hasil response
-                // window.history.back(); // Mengarahkan kembali pengguna
                 window.location.href = 'propose_proposed_page.php';
             } else {
                 const error = await response.text();
-                console.error('Error:', error);
                 alert('Gagal menyimpan event. Silakan coba lagi.');
             }
         } catch (err) {
-            console.error('Fetch Error:', err);
             alert('Terjadi kesalahan saat menghubungi server.');
         }
     });

@@ -62,8 +62,8 @@
   </div>
 
   <!-- JavaScript for form submission -->
-   <script>
-  // Fungsi untuk mendekode JWT
+  <script>
+// Fungsi untuk mendekode JWT
 function parseJwt(token) {
   try {
     const base64Url = token.split('.')[1];
@@ -136,7 +136,6 @@ function displayRoleButtons(roles) {
     button.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mx-2';
     button.textContent = role.charAt(0).toUpperCase() + role.slice(1);
     button.addEventListener('click', () => {
-      console.log('Role selected:', role); // Tambahkan log untuk melihat role yang dipilih
       redirectToDashboard(role);
     });
     roleSelectionContainer.appendChild(button);
@@ -149,7 +148,6 @@ function displayRoleButtons(roles) {
 
 // Fungsi untuk mengarahkan pengguna ke dashboard berdasarkan role
 function redirectToDashboard(role) {
-  console.log('Redirecting to dashboard for role:', role); // Tambahkan log untuk melihat role yang diterima
   if (role === 'Superadmin') {
     window.location.href = 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php';
   } else if (role === 'Admin') {

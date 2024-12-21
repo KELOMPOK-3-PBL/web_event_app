@@ -48,7 +48,7 @@
     <?php include '../component/footer.php'; ?>
 
     <!-- Initialize DataTables -->
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', async () => {
     const eventsUrl = 'http://localhost/pbl/api-03/routes/available_events.php'; // URL API
     const events = await fetchEvents(eventsUrl); // Ambil data acara

@@ -145,22 +145,18 @@
                 body: formData
             });
 
-            console.log('HTTP Status:', response.status);
-            const contentType = response.headers.get('content-type');
-            console.log('Content-Type:', contentType);
-
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Server Error:', errorText);
                 alert(`Gagal menyimpan event. Status: ${response.status}, Respons: ${errorText}`);
                 return;
             }
+
+            const contentType = response.headers.get('content-type');
 
             if (contentType && contentType.includes('application/json')) {
                 let result;
                 try {
                     result = await response.json();
-                    console.log('Response JSON:', result);
 
                     if (result.code === 201 && result.status === 'success') {
                         alert('Event berhasil dibuat!!');
@@ -170,16 +166,13 @@
                         alert('Gagal menyimpan event. Pesan dari server: ' + result.message);
                     }
                 } catch (jsonError) {
-                    console.error('JSON Parsing Error:', jsonError);
                     alert('Gagal memproses respons JSON dari server.');
                 }
             } else {
                 const responseBody = await response.text();
-                console.error('Respons bukan JSON:', responseBody);
                 alert('Respons server bukan JSON. Tidak dapat memproses.');
             }
         } catch (err) {
-            console.error('Fetch Error:', err);
             alert('Terjadi kesalahan saat menghubungi server.');
         }
 

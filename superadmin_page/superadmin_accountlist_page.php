@@ -32,9 +32,11 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Account</th>
+                            <th>Username</th>
+                            <th>Email</th>
                             <th>Roles</th>
-                            <th>Action</th>
+                            <th>Change Role</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,189 +50,169 @@
     <!-- Footer -->
     <?php include '../component/footer.php'; ?>
 
-    <!-- Modal untuk mengubah role -->
-<div id="roleModal" class="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 hidden">
-    <div class="bg-white p-6 rounded-lg w-96">
-        <h3 class="text-lg font-semibold mb-4">Change Roles</h3>
-        <form id="roleForm">
-            <div>
-                <label class="block">
-                    <input type="checkbox" id="role_member" class="mr-2"> Member
-                </label>
-                <label class="block">
-                    <input type="checkbox" id="role_propose" class="mr-2"> Propose
-                </label>
-                <label class="block">
-                    <input type="checkbox" id="role_admin" class="mr-2"> Admin
-                </label>
-                <label class="block">
-                    <input type="checkbox" id="role_superadmin" class="mr-2"> Superadmin
-                </label>
-            </div>
-            <div class="mt-4 flex justify-between">
-                <button type="button" onclick="closeRoleModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
-            </div>
-        </form>
+    <!-- Modal untuk memilih role -->
+    <div id="changeRoleModal" class="modal">
+        <div class="modal-content">
+            <span id="cancelChangeRole" class="close">&times;</span>
+            <h2>Change User Role</h2>
+            <form id="changeRoleForm">
+                <label for="roleSelect">Select Role:</label>
+                <select id="roleSelect" name="roleSelect">
+                    <option value="Member">Member</option>
+                    <option value="Propose">Propose</option>
+                    <option value="Superadmin">Superadmin</option>
+                </select>
+                <br>
+                <button type="submit">Update Role</button>
+            </form>
+        </div>
     </div>
-</div>
 
+    <!-- Add some basic CSS for the modal -->
+    <style>
+    .modal {
+        display: none;  /* Hidden by default */
+        position: fixed;
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    </style>
 <script>
-document.addEventListener('DOMContentLoaded', async () => {
-    const usersUrl = 'http://localhost/pbl/api-03/routes/users.php';
-    const postUrl = 'http://localhost/pbl/api-03/routes/users.php?user_id=${user_id}';
-    const token = localStorage.getItem('jwt'); // Ambil token
+// Fungsi untuk mengambil data dari API
+async function fetchUsers(url) {
+    const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
 
-    // Fungsi untuk mengambil data pengguna
-    async function fetchUsers(url) {
     try {
-
-        if (!token) {
-            alert('Authorization token not found. Please log in.');
-            return; // Hentikan eksekusi jika token tidak ditemukan
-        }
-
         const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`, // Tambahkan Bearer Token
+                'Authorization': `Bearer ${token}`,
             },
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to fetch users');
-        }
+        const data = await response.json();
 
-        const result = await response.json();
-        return result.data || []; // Pastikan hanya mengembalikan data
-    } catch (error) {
-        console.error('Error fetching users:', error.message);
-        alert(`Error: ${error.message}`);
-        return [];
-    }
-}
-
-    // Fungsi untuk mengisi tabel akun
-    function populateAccountTable(users) {
-        const table = $('#accountTable').DataTable();
-        table.clear(); // Bersihkan tabel sebelum mengisi data baru
-
-        users.forEach((user, index) => {
-            const roles = user.roles ? user.roles.split(',') : []; // Pecah string roles menjadi array
-            table.row.add([
-                index + 1, // Kolom No
-                user.email, // Nama pengguna
-                roles.join(', '), // Gabungkan roles kembali jika diperlukan
-                `<div class="flex justify-center space-x-2">
-                    <button class="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600" onclick="changeRole(${user.user_id})">Change Role</button>
-                    <button class="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600" onclick="deleteAccount(${user.user_id})">Delete</button>
-                </div>`
-            ]);
-        });
-
-        table.draw(); // Render ulang tabel
-    }
-
-    // Fungsi untuk mengubah role pengguna dengan checkbox
-    window.changeRole = function(userId) {
-    if (!userId || isNaN(userId)) {
-        alert('Invalid user ID.');
-        return;
-    }
-
-    const roleModal = document.getElementById('roleModal');
-    const roleForm = document.getElementById('roleForm');
-
-    // Reset checkbox
-    ['role_member', 'role_propose', 'role_admin', 'role_superadmin'].forEach(id => {
-        document.getElementById(id).checked = false;
-    });
-
-    // Tampilkan modal
-    roleModal.classList.remove('hidden');
-
-    roleForm.onsubmit = async function(event) {
-    event.preventDefault();
-
-    const selectedRoles = [];
-    if (document.getElementById('role_member').checked) selectedRoles.push(1);
-    if (document.getElementById('role_propose').checked) selectedRoles.push(2);
-    if (document.getElementById('role_admin').checked) selectedRoles.push(3);
-    if (document.getElementById('role_superadmin').checked) selectedRoles.push(4);
-
-    if (selectedRoles.length === 0) {
-        alert('Please select at least one role.');
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('jwt'); // Ambil token
-        const response = await fetch(postUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ user_id: userId, roles: selectedRoles.join(',') }),
-        });
-
-        if (response.ok) {
-            alert('Roles updated successfully.');
-            loadUsers();
-            closeRoleModal();
+        if (data.status === "success") {
+            return data.data; // Mengembalikan array pengguna
         } else {
-            throw new Error('Failed to update roles');
+            console.error("Error fetching data:", data.message);
+            return []; // Mengembalikan array kosong jika gagal
         }
     } catch (error) {
-        alert(error.message);
-        // window.location.reload(); // Refresh halaman
+        console.error("Error fetching API:", error);
+        return []; // Mengembalikan array kosong jika ada error
     }
-};
-
-};
-
-// Fungsi untuk menutup modal
-function closeRoleModal() {
-    const roleModal = document.getElementById('roleModal');
-    roleModal.classList.add('hidden'); // Tutup modal
 }
 
-    // Fungsi untuk menghapus akun pengguna
-window.deleteAccount = function(userId) {
-    if (confirm('Are you sure you want to delete this account?')) {
-        // Perbarui URL dengan user_id yang sesuai
-        const deleteUrl = `http://localhost/pbl/api-03/routes/users.php?user_id=${userId}`;
-        
-        fetch(deleteUrl, {
-            method: 'DELETE',  // Menggunakan metode DELETE
-        })
-        .then((response) => {
-            if (response.ok) {
-                alert('Account deleted successfully.');
-                loadUsers(); // Muat ulang data pengguna
-            } else {
-                throw new Error('Failed to delete account');
-            }
-        })
-        .catch((error) => {
-            alert(error.message);
-        });
-    }
-};
+// Fungsi untuk mengisi data ke tabel
+function populateAccountTable(users) {
+    const tbody = document.querySelector("#accountTable tbody");
+    users.forEach((user, index) => {
+        const row = document.createElement("tr");
 
+        // Nomor urut
+        const cellNo = document.createElement("td");
+        cellNo.textContent = index + 1;
+
+        // Username
+        const cellUsername = document.createElement("td");
+        cellUsername.textContent = user.username;
+
+        // Email
+        const cellEmail = document.createElement("td");
+        cellEmail.textContent = user.email;
+
+        // Roles
+        const cellRoles = document.createElement("td");
+        cellRoles.textContent = user.roles;
+
+        // Change Role Button
+        const cellChangeRole = document.createElement("td");
+        const changeRoleButton = document.createElement("button");
+        changeRoleButton.textContent = "Change Role";
+        changeRoleButton.classList.add("bg-blue-500", "text-white", "px-4", "py-2", "rounded", "hover:bg-blue-700");
+        
+        // Show modal and set the current user in the form when "Change Role" is clicked
+        changeRoleButton.addEventListener("click", () => {
+            openChangeRoleModal(user.user_id, user.roles); // Pass the user_id and roles to the modal
+        });
+
+        cellChangeRole.appendChild(changeRoleButton);
+
+        // Delete Button
+        const cellDelete = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.classList.add("bg-red-500", "text-white", "px-4", "py-2", "rounded", "hover:bg-red-700");
+
+        deleteButton.addEventListener("click", async () => {
+            const confirmed = confirm(`Are you sure you want to delete ${user.username}?`);
+            if (confirmed) {
+                const success = await deleteUser(user.user_id);
+                if (success) {
+                    row.remove();
+                }
+            }
+        });
+
+        cellDelete.appendChild(deleteButton);
+
+        // Menambahkan cell ke row
+        row.appendChild(cellNo);
+        row.appendChild(cellUsername);
+        row.appendChild(cellEmail);
+        row.appendChild(cellRoles);
+        row.appendChild(cellChangeRole);
+        row.appendChild(cellDelete);
+
+        // Menambahkan row ke tabel body
+        tbody.appendChild(row);
+    });
+}
+
+// Fungsi utama untuk memuat dan menampilkan data pengguna
 async function loadUsers() {
-    const users = await fetchUsers(usersUrl);
+    const usersUrl = 'http://localhost/pbl/api-03/routes/users.php';
+    const users = await fetchUsers(usersUrl);  // Mengambil data dengan token
     populateAccountTable(users);
 
     // Inisialisasi DataTables setelah data diisi
     $('#accountTable').DataTable({
         columnDefs: [
-            { orderable: false, targets: 0 },
-            { orderable: false, targets: 3 },
+            { orderable: false, targets: 0 }, // Kolom No tidak bisa diurutkan
+            { orderable: false, targets: 4 }, // Kolom Change Role tidak bisa diurutkan
+            { orderable: false, targets: 5 }, // Kolom Delete tidak bisa diurutkan
         ],
-        order: [[1, 'asc']],
+        order: [[1, 'asc']], // Urutkan berdasarkan kolom Username
         paging: true,
         lengthChange: true,
         pageLength: 5,
@@ -243,10 +225,105 @@ async function loadUsers() {
         },
     });
 }
-    // Muat data awal
-    loadUsers();
+
+// Memanggil loadUsers untuk memuat data awal
+loadUsers();
+
+// Fungsi untuk menghapus user berdasarkan user_id
+async function deleteUser(user_id) {
+    const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+    const url = `http://localhost:80/pbl/api-03/routes/users.php?user_id=${user_id}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'DELETE', // Menggunakan metode DELETE
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`, // Kirim token di header
+            },
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            console.log("User deleted successfully");
+            alert('User berhasil dihapus!');
+            window.location.href = 'superadmin_accountlist_page.php';
+            return true; // Return true jika berhasil
+        } else {
+            console.error("Error deleting user:", data.message);
+            return false; // Return false jika gagal
+        }
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        return false;
+    }
+}
+function openChangeRoleModal(userId, currentRoles) {
+    // Set userId in the modal so we know who we are updating
+    document.querySelector("#changeRoleForm").dataset.userId = userId;
+
+    // Set current roles in the select dropdown
+    const roleSelect = document.querySelector("#roleSelect");
+    roleSelect.value = currentRoles;
+
+    // Show the modal
+    const modal = document.getElementById("changeRoleModal");
+    modal.style.display = "block";
+}
+
+document.getElementById("cancelChangeRole").addEventListener("click", () => {
+    // Close the modal
+    document.getElementById("changeRoleModal").style.display = "none";
 });
 
+document.getElementById("changeRoleForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const userId = event.target.dataset.userId;
+    const newRole = document.getElementById("roleSelect").value;
+
+    // Update user role via API
+    const success = await updateRole(userId, newRole);
+
+    if (success) {
+        alert("User role updated successfully!");
+        location.reload(); // Reload the page to see the updated roles
+    } else {
+        alert("Failed to update user role.");
+    }
+
+    // Close the modal
+    document.getElementById("changeRoleModal").style.display = "none";
+});
+
+// Update user role function (API call)
+async function updateRole(userId, role) {
+    const token = localStorage.getItem('jwt');
+
+    try {
+        const response = await fetch(`http://localhost/pbl/api-03/routes/users.php?user_id=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ roleSelect: role }), // Send the new role
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            return true;
+        } else {
+            console.error("Error updating role:", data.message);
+            return false;
+        }
+    } catch (error) {
+        console.error("Error updating role:", error);
+        return false;
+    }
+}
 </script>
 </body>
 </html>

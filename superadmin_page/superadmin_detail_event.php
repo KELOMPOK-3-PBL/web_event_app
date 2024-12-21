@@ -138,7 +138,6 @@ if (isset($_GET['event_id'])) {
     // Tangkap event_id dari URL menggunakan JavaScript
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('event_id');
-console.log("Event ID:", eventId); // Verifikasi ID yang diterima
 
 async function loadEventDetails(eventId) {
     const apiEndpoint = `http://localhost/pbl/api-03/routes/events.php?event_id=${eventId}`;
@@ -156,7 +155,6 @@ async function loadEventDetails(eventId) {
             let place = event.place || '';
             let quota = event.quota || '';
             let date_start = event.date_start ? event.date_start.replace(' ', 'T') : '';
-            // let date_end = event.date_end ? event.date_end.replace(' ', 'T') : '';
             let description = event.description || '';
             let note = event.note || '';
 
@@ -167,7 +165,6 @@ async function loadEventDetails(eventId) {
             document.getElementById('place').value = place;
             document.getElementById('quota').value = quota;
             document.getElementById('date_start').value = date_start;
-            // document.getElementById('date_end').value = date_end;
             document.getElementById('description').value = description;
 
             // Poster logic
@@ -179,22 +176,17 @@ async function loadEventDetails(eventId) {
                 posterPreview.alt = "Event Poster";
             }
             if (posterDownloadLink && poster) {
-                // Make sure the path is complete, by adding the hostname (localhost)
                 const fullPosterUrl = `http://localhost${poster}`;
-                
-                // Update the download link with the correct URL
                 posterDownloadLink.href = fullPosterUrl;
-                posterDownloadLink.download = fullPosterUrl.split('/').pop(); // Automatically get the file name from the URL
+                posterDownloadLink.download = fullPosterUrl.split('/').pop();
             }
 
             // If you have a poster file input, you can set it here
             const posterInput = document.getElementById('poster');
             if (posterInput) {
-                // Set poster if it's available, if the input is meant to be updated.
                 posterInput.value = '';  // Clear the input if you are allowing new file upload.
             }
 
-            // Set the selected category in the dropdown
             // Set the selected category in the dropdown
             const categorySelect = document.getElementById('category_id');
             if (categorySelect && event.category) {
@@ -205,14 +197,12 @@ async function loadEventDetails(eventId) {
                 });
             }
 
-
             // Update QR code link (assuming you have a qrCode element)
             const qr_id = eventId; // Original data
             const encodedqr_id = btoa(qr_id.toString()); // Base64 encoding
 
             QRCode.toCanvas(document.getElementById('qrcode'), encodedqr_id, function (error) {
                 if (error) console.error(error);
-                console.log('QR Code berhasil dibuat!');
             });
         } else {
             console.error('Failed to fetch event details:', data.message);
@@ -232,13 +222,10 @@ if (eventId) {
 function formatDateTime(inputDate) {
     // Pisahkan tanggal dan waktu
     const [date, time] = inputDate.split(' ');
-    // Pisahkan bagian waktu (jam:menit:detik)
     const [hour, minute] = time.split(':');
 
     // Gabungkan menjadi format yang sesuai untuk input datetime-local
     return `${date}T${hour}:${minute}`;
 }
-
-
 </script>
 </html>

@@ -67,7 +67,6 @@ fetch('http://localhost/pbl/api-03/routes/auth.php', {
 })
 .then(response => response.json())
 .then(data => {
-    console.log('API Response:', data); // Log respons API untuk debugging
     if (data.status === 'success') {
         // Ambil username dari data yang diterima
         const username = data.data.username;
