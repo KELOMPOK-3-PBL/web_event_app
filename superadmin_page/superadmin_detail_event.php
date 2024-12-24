@@ -3,8 +3,12 @@
 if (isset($_GET['event_id'])) {
     $event_id = $_GET['event_id'];
 } else {
-    // Jika event_id tidak ditemukan, arahkan ke halaman lain atau tampilkan pesan error
-    die("Event ID tidak ditemukan.");
+    // Jika event_id tidak ditemukan, tampilkan pesan dan arahkan setelah delay
+    echo "Event ID tidak ditemukan.";
+
+    sleep(1);  // Menunggu selama 3 detik sebelum mengarahkan
+    header('Location: ../signin_screen.php');  // Mengarahkan ke halaman signin
+    exit;  // Pastikan script berhenti setelah pengalihan
 }
 ?>
 <!DOCTYPE html>
@@ -135,6 +139,43 @@ if (isset($_GET['event_id'])) {
     <?php include '../component/footer.php'; ?>
 </body>
 <script>
+// Fungsi untuk memeriksa apakah pengguna sudah login
+function checkLoginStatus() {
+    const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+
+    if (!token) {
+        // Jika token tidak ada, arahkan ke halaman sign-in
+        window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
+    } else {
+        // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
+        const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
+        if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
+            // Jika token kadaluarsa atau invalid, arahkan kembali ke login
+            localStorage.removeItem('jwt'); // Hapus token yang tidak valid
+            window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
+        }
+    }
+}
+
+// Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }
+}
+
+// Panggil fungsi checkLoginStatus() di awal skrip
+checkLoginStatus();
+
     // Tangkap event_id dari URL menggunakan JavaScript
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('event_id');

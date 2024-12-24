@@ -3,8 +3,12 @@
 if (isset($_GET['event_id'])) {
     $event_id = $_GET['event_id'];
 } else {
-    // Jika event_id tidak ditemukan, arahkan ke halaman lain atau tampilkan pesan error
-    die("Event ID tidak ditemukan.");
+    // Jika event_id tidak ditemukan, tampilkan pesan dan arahkan setelah delay
+    echo "Event ID tidak ditemukan.";
+
+    sleep(1);  // Menunggu selama 3 detik sebelum mengarahkan
+    header('Location: ../signin_screen.php');  // Mengarahkan ke halaman signin
+    exit;  // Pastikan script berhenti setelah pengalihan
 }
 ?>
 <!DOCTYPE html>

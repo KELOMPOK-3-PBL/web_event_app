@@ -56,14 +56,27 @@
             <span id="cancelChangeRole" class="close">&times;</span>
             <h2>Change User Role</h2>
             <form id="changeRoleForm">
-                <label for="roleSelect">Select Role:</label>
-                <select id="roleSelect" name="roleSelect">
-                    <option value="Member">Member</option>
-                    <option value="Propose">Propose</option>
-                    <option value="Superadmin">Superadmin</option>
-                </select>
+                <!-- Hidden field to store userId -->
+                <input type="hidden" id="hiddenUserId" name="user_id">
+                
+                <label>Select Roles:</label>
+                <div>
+                    <label>
+                        <input type="checkbox" name="role" value=1> Member
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" name="role" value=2> Propose
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" name="role" value=3> Admin
+                    </label>
+                </div>
                 <br>
-                <button type="submit">Update Role</button>
+                <button type="submit" class="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg">Update Roles</button>
             </form>
         </div>
     </div>
@@ -74,7 +87,7 @@
         display: none;  /* Hidden by default */
         position: fixed;
         z-index: 1; /* Sit on top */
-        left: 0;
+        left: 120px;
         top: 0;
         width: 100%; /* Full width */
         height: 100%; /* Full height */
@@ -106,6 +119,43 @@
     }
     </style>
 <script>
+// Fungsi untuk memeriksa apakah pengguna sudah login
+function checkLoginStatus() {
+    const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+
+    if (!token) {
+        // Jika token tidak ada, arahkan ke halaman sign-in
+        window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
+    } else {
+        // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
+        const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
+        if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
+            // Jika token kadaluarsa atau invalid, arahkan kembali ke login
+            localStorage.removeItem('jwt'); // Hapus token yang tidak valid
+            window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
+        }
+    }
+}
+
+// Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
+    }
+}
+
+// Panggil fungsi checkLoginStatus() di awal skrip
+checkLoginStatus();
+
 // Fungsi untuk mengambil data dari API
 async function fetchUsers(url) {
     const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
@@ -161,9 +211,8 @@ function populateAccountTable(users) {
         changeRoleButton.textContent = "Change Role";
         changeRoleButton.classList.add("bg-blue-500", "text-white", "px-4", "py-2", "rounded", "hover:bg-blue-700");
         
-        // Show modal and set the current user in the form when "Change Role" is clicked
         changeRoleButton.addEventListener("click", () => {
-            openChangeRoleModal(user.user_id, user.roles); // Pass the user_id and roles to the modal
+            openChangeRoleModal(user.user_id, user.roles); // Call the function
         });
 
         cellChangeRole.appendChild(changeRoleButton);
@@ -246,7 +295,6 @@ async function deleteUser(user_id) {
         const data = await response.json();
 
         if (data.status === "success") {
-            console.log("User deleted successfully");
             alert('User berhasil dihapus!');
             window.location.href = 'superadmin_accountlist_page.php';
             return true; // Return true jika berhasil
@@ -259,71 +307,85 @@ async function deleteUser(user_id) {
         return false;
     }
 }
-function openChangeRoleModal(userId, currentRoles) {
-    // Set userId in the modal so we know who we are updating
-    document.querySelector("#changeRoleForm").dataset.userId = userId;
 
-    // Set current roles in the select dropdown
-    const roleSelect = document.querySelector("#roleSelect");
-    roleSelect.value = currentRoles;
+// Modal element
+const modal = document.getElementById('changeRoleModal');
+const closeModalButton = document.getElementById('cancelChangeRole');
 
-    // Show the modal
-    const modal = document.getElementById("changeRoleModal");
-    modal.style.display = "block";
+// Function to open modal and set user data
+function openChangeRoleModal(userId, currentRoles) { 
+    modal.style.display = 'block';
+
+    // Set user_id in a hidden field
+    document.getElementById('hiddenUserId').value = userId;
+
+    // Update the checkbox states
+    const roleCheckboxes = document.querySelectorAll('input[name="role"]');
+    roleCheckboxes.forEach((checkbox) => {
+        checkbox.checked = currentRoles.includes(parseInt(checkbox.value, 10));
+    });
 }
 
-document.getElementById("cancelChangeRole").addEventListener("click", () => {
-    // Close the modal
-    document.getElementById("changeRoleModal").style.display = "none";
+// Close modal when clicking "X"
+closeModalButton.addEventListener('click', () => {
+    modal.style.display = 'none';
 });
 
-document.getElementById("changeRoleForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const userId = event.target.dataset.userId;
-    const newRole = document.getElementById("roleSelect").value;
-
-    // Update user role via API
-    const success = await updateRole(userId, newRole);
-
-    if (success) {
-        alert("User role updated successfully!");
-        location.reload(); // Reload the page to see the updated roles
-    } else {
-        alert("Failed to update user role.");
+// Close modal when clicking outside the modal
+window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        modal.style.display = 'none';
     }
-
-    // Close the modal
-    document.getElementById("changeRoleModal").style.display = "none";
 });
 
-// Update user role function (API call)
-async function updateRole(userId, role) {
+// Close modal when pressing the "Esc" key
+window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        modal.style.display = 'none';
+    }
+});
+
+// Handle form submission in modal
+const form = document.getElementById('changeRoleForm');
+form.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Mencegah reload halaman
+
+    // Ambil data dari modal
+    const userId = document.getElementById('hiddenUserId').value; // Ambil user_id dari field tersembunyi
+    const selectedRoles = Array.from(document.querySelectorAll('input[name="role"]:checked')).map(input => input.value).join(','); // Ambil ID roles
+
+    // Buat FormData untuk pengiriman data
+    const formData = new FormData();
+    formData.append('roles', selectedRoles); // Kirim hanya roles
+
+    // Ambil token dari localStorage
     const token = localStorage.getItem('jwt');
 
     try {
-        const response = await fetch(`http://localhost/pbl/api-03/routes/users.php?user_id=${userId}`, {
+        // Kirim data ke endpoint
+        const response = await fetch(`http://localhost:80/pbl/api-03/routes/users.php?user_id=${userId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${token}`, // Tambahkan token
             },
-            body: JSON.stringify({ roleSelect: role }), // Send the new role
+            body: formData, // Kirim FormData
         });
 
-        const data = await response.json();
-
-        if (data.status === "success") {
-            return true;
+        // Tangani respon dari server
+        if (response.ok) {
+            const result = await response.json();
+            alert('Roles berhasil diperbarui!');
+            modal.style.display = 'none'; // Tutup modal setelah sukses
+            location.reload(); // Reload halaman untuk memperbarui data
         } else {
-            console.error("Error updating role:", data.message);
-            return false;
+            const error = await response.text();
+            alert(`Gagal memperbarui roles: ${error}`);
         }
-    } catch (error) {
-        console.error("Error updating role:", error);
-        return false;
+    } catch (err) {
+        console.error('Fetch Error:', err);
+        alert('Terjadi kesalahan saat menghubungi server.');
     }
-}
+});
 </script>
 </body>
 </html>
