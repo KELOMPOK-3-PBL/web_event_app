@@ -106,6 +106,7 @@ document.getElementById('logout-button').addEventListener('click', function (e) 
         if (data.status === 'success') {
             // Menghapus username dan token dari localStorage
             localStorage.removeItem('username');
+            sessionStorage.removeItem('jwt');
             localStorage.removeItem('jwt'); // Hapus token juga
             
             // Jika logout berhasil, redirect ke halaman login

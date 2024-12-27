@@ -44,6 +44,18 @@
                     </tbody>
                 </table>
             </div>
+            <h2 class="text-4xl font-semibold">Menu Tambahan</h2>
+            <div class="p-6">
+                <ol class="list-decimal pl-6 space-y-6">
+                    <li>
+                        <a href="create_user.php" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg">Buat akun (Batch)</a>
+                    </li>
+                    <li>
+                        <a href="reset_password.php" class="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg">Reset Password</a>
+                    </li>
+                </ol>
+            </div>
+
         </section>
     </div>
 

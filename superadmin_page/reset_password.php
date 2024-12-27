@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forgot Password</title>
+  <title>Reset Password</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-cover bg-center h-screen font-['Inter']" style="background-image: url('image/welcome_screen.jpg');">
+<body class="bg-cover bg-center h-screen font-['Inter']" style="background-image: url('../image/welcome_screen.jpg');">
   <div class="relative flex items-center justify-center h-full">
     <div class="absolute inset-0 bg-black opacity-50"></div>
     
     <div class="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg relative z-10">
-      <h2 class="text-2xl font-bold text-center mb-6">FORGOT PASSWORD</h2>
+      <h2 class="text-2xl font-bold text-center mb-6">Reset Password</h2>
       <p class="text-sm text-gray-600 text-center mb-6">Enter your email address to reset password.</p>
 
       <form id="forgotPasswordForm">
@@ -26,14 +26,20 @@
           </div>
         </div>
 
-        <div class="mb-4">
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">RESET PASSWORD</button>
+        <div class="justify-center mb-4 flex space-x-1.5">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto" type="submit">Reset Password</button>
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto" type="button" id="backButton">Back</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
+  // Menambahkan event listener ke tombol "Back"
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.history.back();
+  });
+
   document.getElementById('forgotPasswordForm').addEventListener('submit', async (event) => {
     event.preventDefault();
     const email = document.getElementById('email').value;

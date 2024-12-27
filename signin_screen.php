@@ -48,7 +48,7 @@
         <!-- Checkbox untuk "Remember me" -->
         <div class="flex items-center justify-between mb-4">
           <label class="flex items-center">
-            <input class="mr-2 leading-tight" type="checkbox" />
+            <input class="mr-2 leading-tight" type="checkbox" id="rememberMe">
             <span class="text-sm">Remember me</span>
           </label>
         </div>
@@ -62,7 +62,7 @@
   </div>
 
   <!-- JavaScript for form submission -->
-  <script>
+<script>
 // Fungsi untuk mendekode JWT
 function parseJwt(token) {
   try {
@@ -79,85 +79,125 @@ function parseJwt(token) {
   }
 }
 
-// Event listener untuk form submit
-document.getElementById('signinForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  const signInButton = event.submitter;
+document.addEventListener('DOMContentLoaded', () => {
+    const token = sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
 
-  signInButton.disabled = true; // Disable button to prevent multiple requests
-  signInButton.textContent = 'Signing in...';
+    if (token) {
+        try {
+            const decoded = parseJwt(token);
 
-  try {
-    const response = await fetch('http://localhost/pbl/api-03/routes/auth.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
-    });
-
-    const data = await response.json();
-
-    if (data.status === 'success') {
-      const token = data.data.token;
-      const decoded = parseJwt(token); // Dekode JWT
-      localStorage.setItem('jwt', token);
-      localStorage.setItem('username', decoded.username); // Menyimpan username
-      localStorage.setItem('roles', JSON.stringify(decoded.roles));
-      const roles = decoded.roles; // Array of roles like ["admin", "superadmin"]
-
-      // Jika lebih dari satu role, tampilkan tombol untuk memilih role
-      if (roles.length > 1) {
-        displayRoleButtons(roles); // Menampilkan tombol pemilihan role
-      } else if (roles.length === 1) {
-        redirectToDashboard(roles[0]); // Langsung ke dashboard jika hanya satu role
-      } else {
-        displayError('No role found.');
-      }
-    } else {
-      displayError(data.message); // Inline error display
+            // Cek validitas token (opsional: sesuai implementasi backend)
+            const isTokenExpired = decoded.exp * 1000 < Date.now();
+            if (!isTokenExpired) {
+                // Redirect pengguna berdasarkan role atau default
+                const roles = decoded.roles || [];
+                if (roles.length === 1) {
+                    redirectToDashboard(roles[0]);
+                } else if (roles.length > 1) {
+                    displayRoleButtons(roles); // Jika butuh pemilihan role
+                }
+                return; // Hentikan eksekusi lebih lanjut
+            }
+        } catch (e) {
+            console.error('Token invalid:', e);
+        }
     }
-  } catch (error) {
-    console.error('Error:', error);
-    displayError('Login failed. Please try again.');
-  } finally {
-    signInButton.disabled = false;
-    signInButton.textContent = 'SIGN IN';
-  }
+
+    // Jika tidak ada token valid, tetap di halaman signin
 });
+
+
+document.getElementById('signinForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    const signInButton = event.submitter;
+
+    signInButton.disabled = true;
+    signInButton.textContent = 'Signing in...';
+
+    try {
+        const response = await fetch('http://localhost/pbl/api-03/routes/auth.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, remember_me: rememberMe }),
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            const token = data.data.access_token;
+
+            if (!rememberMe) {
+                sessionStorage.setItem('jwt', token);
+            } else {
+                try {
+                    const decoded = parseJwt(token);
+                    localStorage.setItem('jwt', token);
+                    localStorage.setItem('username', decoded.username);
+                    localStorage.setItem('roles', JSON.stringify(decoded.roles));
+
+                    const roles = decoded?.roles || [];
+                    if (roles.length > 1) {
+                        displayRoleButtons(roles);
+                    } else if (roles.length === 1) {
+                        redirectToDashboard(roles[0]);
+                    } else {
+                        displayError('No role found.');
+                    }
+                } catch (e) {
+                    displayError('Invalid token format. Please log in again.');
+                }
+            }
+        } else {
+            displayError(data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        displayError('Login failed. Please try again.');
+    } finally {
+        signInButton.disabled = false;
+        signInButton.textContent = 'SIGN IN';
+    }
+});
+
 
 // Fungsi untuk menampilkan tombol untuk memilih role
 function displayRoleButtons(roles) {
   const roleSelectionContainer = document.createElement('div');
   roleSelectionContainer.className = 'text-center mt-4';
+  roleSelectionContainer.id = 'roleSelectionContainer';
 
   roles.forEach(role => {
     const button = document.createElement('button');
     button.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 mx-2';
     button.textContent = role.charAt(0).toUpperCase() + role.slice(1);
     button.addEventListener('click', () => {
+      document.getElementById('roleSelectionContainer').remove();
       redirectToDashboard(role);
     });
     roleSelectionContainer.appendChild(button);
   });
 
-  // Menampilkan tombol di dalam form
   const form = document.getElementById('signinForm');
   form.appendChild(roleSelectionContainer);
 }
 
 // Fungsi untuk mengarahkan pengguna ke dashboard berdasarkan role
 function redirectToDashboard(role) {
-  if (role === 'Superadmin') {
-    window.location.href = 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php';
-  } else if (role === 'Admin') {
-    window.location.href = 'http://localhost/pbl/web_event_app/admin_page/admin_dashboard.php';
-  } else if (role === 'Propose') {
-    window.location.href = 'http://localhost/pbl/web_event_app/propose_page/propose_dashboard.php';
-  } else if (role === 'Member') {
-    window.location.href = 'http://localhost/pbl/web_event_app/member_page/member_dashboard.php';
+  const dashboards = {
+    Superadmin: 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php',
+    Admin: 'http://localhost/pbl/web_event_app/admin_page/admin_dashboard.php',
+    Propose: 'http://localhost/pbl/web_event_app/propose_page/propose_dashboard.php',
+    Member: 'http://localhost/pbl/web_event_app/member_page/member_dashboard.php',
+  };
+
+  const dashboardUrl = dashboards[role];
+  if (dashboardUrl) {
+    window.location.href = dashboardUrl;
   } else {
-    displayError('No dashboard assigned for your role.');
+    displayError(`No dashboard assigned for your role: ${role}`);
   }
 }
 
