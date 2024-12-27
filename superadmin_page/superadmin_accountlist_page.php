@@ -29,10 +29,17 @@
         <section>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-4xl font-semibold">Account List</h2>
-                <button id="createUserButton"
-                    class="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700">
-                    Create User
-                </button>
+                <!-- Tombol untuk membuka modal upload file -->
+                <div class="flex justify-end space-x-4">
+                    <button id="createUserButton"
+                        class="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700">
+                        Create User
+                    </button>
+                    <button id="uploadFileButton"
+                        class="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-700">
+                        Upload Spreadsheet
+                    </button>
+                </div>
             </div>
 
             <!-- Modal to create new user -->
@@ -63,6 +70,24 @@
                         </div>
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg mt-4">
                             Create User
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal untuk upload file -->
+            <div id="uploadFileModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeUploadFileModal" class="close">&times;</span>
+                    <h2>Upload Spreadsheet</h2>
+                    <form id="uploadFileForm" enctype="multipart/form-data">
+                        <div>
+                            <label for="file">Upload File:</label>
+                            <input type="file" id="file" name="file" accept=".xlsx,.xls" required
+                                class="border rounded px-4 py-2 w-full">
+                        </div>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg mt-4">
+                            Upload
                         </button>
                     </form>
                 </div>
@@ -250,6 +275,59 @@
             } catch (err) {
                 console.error('Error:', err);
                 alert('An error occurred while creating the user.');
+            }
+        });
+
+        // Open modal
+        document.getElementById('uploadFileButton').addEventListener('click', () => {
+            document.getElementById('uploadFileModal').style.display = 'block';
+        });
+
+        // Close modal
+        document.getElementById('closeUploadFileModal').addEventListener('click', () => {
+            document.getElementById('uploadFileModal').style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === document.getElementById('uploadFileModal')) {
+                document.getElementById('uploadFileModal').style.display = 'none';
+            }
+        });
+
+        // Handle file upload form submission
+        document.getElementById('uploadFileForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const token = localStorage.getItem('access_token');
+
+            try {
+                const response = await fetch('http://localhost/pbl/api-03/routes/bulk_users.php', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+                // Read response body once and store it
+                const result = await response.json();
+
+                // Debugging: Log the response status and body
+                console.log('Response Status:', response.status);
+                console.log('Response Body:', result);
+
+
+
+                if (response.status === 200) {
+                    alert(`Users successfully created: ${result.message}`);
+                    document.getElementById('uploadFileModal').style.display = 'none';
+                    location.reload();
+                } else {
+                    alert(`Error uploading file: ${result.message}`);
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                alert('An error occurred while uploading the file.');
             }
         });
 
