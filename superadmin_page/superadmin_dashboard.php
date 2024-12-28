@@ -1,3 +1,41 @@
+<script>
+    // Fungsi untuk memeriksa apakah pengguna sudah login
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+
+        if (!token) {
+            // Jika token tidak ada, arahkan ke halaman sign-in
+            window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
+        } else {
+            // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
+            const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
+            if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
+                // Jika token kadaluarsa atau invalid, arahkan kembali ke login
+                localStorage.removeItem('jwt'); // Hapus token yang tidak valid
+                window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
+            }
+        }
+    }
+
+    // Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
+    function parseJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return null;
+        }
+    }
+
+    // Panggil fungsi checkLoginStatus() di awal skrip
+    checkLoginStatus();
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,43 +100,6 @@
     <?php include '../component/footer.php'; ?>
 </body>
 <script>
-// Fungsi untuk memeriksa apakah pengguna sudah login
-function checkLoginStatus() {
-    const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
-
-    if (!token) {
-        // Jika token tidak ada, arahkan ke halaman sign-in
-        window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
-    } else {
-        // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
-        const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
-        if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
-            // Jika token kadaluarsa atau invalid, arahkan kembali ke login
-            localStorage.removeItem('jwt'); // Hapus token yang tidak valid
-            window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
-        }
-    }
-}
-
-// Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
-function parseJwt(token) {
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    } catch (error) {
-        console.error("Error decoding token:", error);
-        return null;
-    }
-}
-
-// Panggil fungsi checkLoginStatus() di awal skrip
-checkLoginStatus();
-
 // Fetch jumlah event berdasarkan status
 fetch('http://localhost/pbl/api-03/routes/events_count.php', {
 })
@@ -187,7 +188,14 @@ function displayEvents(events, containerId) {
     events.forEach(event => {
         const eventCard = document.createElement('a');
         eventCard.className = 'bg-white rounded-lg shadow-lg p-4 event-card';
-        eventCard.href = `superadmin_edit_event.php?event_id=${event.event_id}`;
+
+        // Tentukan tautan berdasarkan containerId
+        if (containerId === 'new-proposed-events-container') {
+            eventCard.href = `superadmin_edit_event.php?event_id=${event.event_id}`;
+        } else if (containerId === 'available-events-container') {
+            eventCard.href = `superadmin_detail_event.php?event_id=${event.event_id}`;
+        }
+
         eventCard.innerHTML = `
             <img src="http://localhost${event.poster}" alt="${event.title}" class="w-80 h-80 rounded mb-4">
             <h3 class="text-lg font-semibold">${event.title}</h3>

@@ -1,3 +1,41 @@
+<script>
+    // Fungsi untuk memeriksa apakah pengguna sudah login
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+
+        if (!token) {
+            // Jika token tidak ada, arahkan ke halaman sign-in
+            window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
+        } else {
+            // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
+            const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
+            if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
+                // Jika token kadaluarsa atau invalid, arahkan kembali ke login
+                localStorage.removeItem('jwt'); // Hapus token yang tidak valid
+                window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
+            }
+        }
+    }
+
+    // Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
+    function parseJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return null;
+        }
+    }
+
+    // Panggil fungsi checkLoginStatus() di awal skrip
+    checkLoginStatus();
+</script>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,71 +65,7 @@
     <!-- Main Content -->
     <div class="ml-64 p-8 mt-[120px]">
         <section>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-4xl font-semibold">Account List</h2>
-                <!-- Tombol untuk membuka modal upload file -->
-                <div class="flex justify-end space-x-4">
-                    <button id="createUserButton"
-                        class="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700">
-                        Create User
-                    </button>
-                    <button id="uploadFileButton"
-                        class="px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-700">
-                        Upload Spreadsheet
-                    </button>
-                </div>
-            </div>
-
-            <!-- Modal to create new user -->
-            <div id="createUserModal" class="modal">
-                <div class="modal-content">
-                    <span id="closeCreateUserModal" class="close">&times;</span>
-                    <h2>Create New User</h2>
-                    <form id="createUserForm">
-                        <div>
-                            <label for="username">Username:</label>
-                            <input type="text" id="username" name="username" required
-                                class="border rounded px-4 py-2 w-full">
-                        </div>
-                        <div>
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required
-                                class="border rounded px-4 py-2 w-full">
-                        </div>
-                        <div>
-                            <label for="password">Password:</label>
-                            <input type="password" id="password" name="password" required
-                                class="border rounded px-4 py-2 w-full">
-                        </div>
-                        <div>
-                            <label for="roles">Roles (comma-separated):</label>
-                            <input type="text" id="roles" name="roles" placeholder="e.g., 1,2,3" required
-                                class="border rounded px-4 py-2 w-full">
-                        </div>
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg mt-4">
-                            Create User
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Modal untuk upload file -->
-            <div id="uploadFileModal" class="modal">
-                <div class="modal-content">
-                    <span id="closeUploadFileModal" class="close">&times;</span>
-                    <h2>Upload Spreadsheet</h2>
-                    <form id="uploadFileForm" enctype="multipart/form-data">
-                        <div>
-                            <label for="file">Upload File:</label>
-                            <input type="file" id="file" name="file" accept=".xlsx,.xls" required
-                                class="border rounded px-4 py-2 w-full">
-                        </div>
-                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg mt-4">
-                            Upload
-                        </button>
-                    </form>
-                </div>
-            </div>
+            <h2 class="text-4xl font-semibold">Account List</h2>
 
             <!-- Table to display account list -->
             <div class="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -205,147 +179,10 @@
             cursor: pointer;
         }
     </style>
-    <script>
-        // Fungsi untuk memeriksa apakah pengguna sudah login
-        function checkLoginStatus() {
-            const token = localStorage.getItem('access_token'); // Ambil token dari localStorage
-
-            if (!token) {
-                // Jika token tidak ada, arahkan ke halaman sign-in
-                window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
-            } else {
-                // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
-                const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
-                if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
-                    // Jika token kadaluarsa atau invalid, arahkan kembali ke login
-                    localStorage.removeItem('access_token'); // Hapus token yang tidak valid
-                    window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
-                }
-            }
-        }
-
-        // Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
-        function parseJwt(token) {
-            try {
-                const base64Url = token.split('.')[1];
-                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-
-                return JSON.parse(jsonPayload);
-            } catch (error) {
-                console.error("Error decoding token:", error);
-                return null;
-            }
-        }
-
-        // Panggil fungsi checkLoginStatus() di awal skrip
-        checkLoginStatus();
-
-        // Open modal
-        document.getElementById('createUserButton').addEventListener('click', () => {
-            document.getElementById('createUserModal').style.display = 'block';
-        });
-
-        // Close modal
-        document.getElementById('closeCreateUserModal').addEventListener('click', () => {
-            document.getElementById('createUserModal').style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === document.getElementById('createUserModal')) {
-                document.getElementById('createUserModal').style.display = 'none';
-            }
-        });
-
-        // Handle form submission
-        document.getElementById('createUserForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const token = localStorage.getItem('access_token'); // Adjust if token is stored differently
-
-            try {
-                const response = await fetch('http://localhost/pbl/api-03/routes/users.php', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`, // Add token for authentication
-                    },
-                    body: formData,
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    alert('User successfully created!');
-                    document.getElementById('createUserModal').style.display = 'none';
-                    location.reload(); // Reload page to see updated list
-                } else {
-                    const error = await response.json();
-                    alert(`Error creating user: ${error.message}`);
-                }
-            } catch (err) {
-                console.error('Error:', err);
-                alert('An error occurred while creating the user.');
-            }
-        });
-
-        // Open modal
-        document.getElementById('uploadFileButton').addEventListener('click', () => {
-            document.getElementById('uploadFileModal').style.display = 'block';
-        });
-
-        // Close modal
-        document.getElementById('closeUploadFileModal').addEventListener('click', () => {
-            document.getElementById('uploadFileModal').style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === document.getElementById('uploadFileModal')) {
-                document.getElementById('uploadFileModal').style.display = 'none';
-            }
-        });
-
-        // Handle file upload form submission
-        document.getElementById('uploadFileForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(event.target);
-            const token = localStorage.getItem('access_token');
-
-            try {
-                const response = await fetch('http://localhost/pbl/api-03/routes/bulk_users.php', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: formData,
-                });
-                // Read response body once and store it
-                const result = await response.json();
-
-                // Debugging: Log the response status and body
-                console.log('Response Status:', response.status);
-                console.log('Response Body:', result);
-
-
-
-                if (response.status === 200) {
-                    alert(`Users successfully created: ${result.message}`);
-                    document.getElementById('uploadFileModal').style.display = 'none';
-                    location.reload();
-                } else {
-                    alert(`Error uploading file: ${result.message}`);
-                }
-            } catch (err) {
-                console.error('Error:', err);
-                alert('An error occurred while uploading the file.');
-            }
-        });
-
+<script>
         // Fungsi untuk mengambil data dari API
         async function fetchUsers(url) {
-            const token = localStorage.getItem('access_token'); // Ambil token dari localStorage
+            const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
 
             try {
                 const response = await fetch(url, {
@@ -394,6 +231,8 @@
 
                 // Change Role Button
                 const cellChangeRole = document.createElement("td");
+                cellChangeRole.classList.add("text-center", "align-middle");
+
                 const changeRoleButton = document.createElement("button");
                 changeRoleButton.textContent = "Change Role";
                 changeRoleButton.classList.add("bg-blue-500", "text-white", "px-4", "py-2", "rounded", "hover:bg-blue-700");
@@ -406,6 +245,8 @@
 
                 // Delete Button
                 const cellDelete = document.createElement("td");
+                cellDelete.classList.add("text-center", "align-middle"); // Kelas Tailwind untuk pusatkan konten di tengah
+
                 const deleteButton = document.createElement("button");
                 deleteButton.textContent = "Delete";
                 deleteButton.classList.add("bg-red-500", "text-white", "px-4", "py-2", "rounded", "hover:bg-red-700");
@@ -467,7 +308,7 @@
 
         // Fungsi untuk menghapus user berdasarkan user_id
         async function deleteUser(user_id) {
-            const token = localStorage.getItem('access_token'); // Ambil token dari localStorage
+            const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
             const url = `http://localhost:80/pbl/api-03/routes/users.php?user_id=${user_id}`;
 
             try {
@@ -546,7 +387,7 @@
             formData.append('roles', selectedRoles); // Kirim hanya roles
 
             // Ambil token dari localStorage
-            const token = localStorage.getItem('access_token');
+            const token = localStorage.getItem('jwt');
 
             try {
                 // Kirim data ke endpoint

@@ -80,7 +80,7 @@ function parseJwt(token) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const token = sessionStorage.getItem('jwt') || localStorage.getItem('jwt');
+    const token = sessionStorage.getItem('token');
 
     if (token) {
         try {
@@ -128,28 +128,48 @@ document.getElementById('signinForm').addEventListener('submit', async (event) =
 
         if (data.status === 'success') {
             const token = data.data.access_token;
+            // const token = getCookie('access_token');
 
-            if (!rememberMe) {
-                sessionStorage.setItem('jwt', token);
-            } else {
-                try {
-                    const decoded = parseJwt(token);
-                    localStorage.setItem('jwt', token);
-                    localStorage.setItem('username', decoded.username);
-                    localStorage.setItem('roles', JSON.stringify(decoded.roles));
+            if (rememberMe) {
+              // Jika "Remember Me" dicentang, simpan token dan data di sessionStorage
+              sessionStorage.setItem('token', token);
+              try {
+                  const decoded = parseJwt(token);
+                  localStorage.setItem('jwt', token);
+                  localStorage.setItem('username', decoded.username);
+                  localStorage.setItem('roles', JSON.stringify(decoded.roles));
 
-                    const roles = decoded?.roles || [];
-                    if (roles.length > 1) {
-                        displayRoleButtons(roles);
-                    } else if (roles.length === 1) {
-                        redirectToDashboard(roles[0]);
-                    } else {
-                        displayError('No role found.');
-                    }
-                } catch (e) {
-                    displayError('Invalid token format. Please log in again.');
-                }
-            }
+                  const roles = decoded?.roles || [];
+                  if (roles.length > 1) {
+                      displayRoleButtons(roles);
+                  } else if (roles.length === 1) {
+                      redirectToDashboard(roles[0]);
+                  } else {
+                      displayError('No role found.');
+                  }
+              } catch (e) {
+                  displayError('Invalid token format. Please log in again.');
+              }
+          } else {
+              // Jika "Remember Me" tidak dicentang, simpan token dan data di localStorage
+              localStorage.setItem('jwt', token);
+              try {
+                  const decoded = parseJwt(token);
+                  localStorage.setItem('username', decoded.username);
+                  localStorage.setItem('roles', JSON.stringify(decoded.roles));
+
+                  const roles = decoded?.roles || [];
+                  if (roles.length > 1) {
+                      displayRoleButtons(roles);
+                  } else if (roles.length === 1) {
+                      redirectToDashboard(roles[0]);
+                  } else {
+                      displayError('No role found.');
+                  }
+              } catch (e) {
+                  displayError('Invalid token format. Please log in again.');
+              }
+          }
         } else {
             displayError(data.message);
         }

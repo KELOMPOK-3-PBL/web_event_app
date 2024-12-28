@@ -1,3 +1,41 @@
+<script>
+    // Fungsi untuk memeriksa apakah pengguna sudah login
+    function checkLoginStatus() {
+        const token = localStorage.getItem('jwt'); // Ambil token dari localStorage
+
+        if (!token) {
+            // Jika token tidak ada, arahkan ke halaman sign-in
+            window.location.href = '../signin_screen.php'; // Ubah sesuai dengan lokasi halaman sign-in
+        } else {
+            // Jika token ada, lakukan verifikasi lebih lanjut jika diperlukan
+            const decoded = parseJwt(token); // Dekode JWT untuk verifikasi lebih lanjut
+            if (!decoded || new Date(decoded.exp * 1000) < new Date()) {
+                // Jika token kadaluarsa atau invalid, arahkan kembali ke login
+                localStorage.removeItem('jwt'); // Hapus token yang tidak valid
+                window.location.href = 'signin_screen.php'; // Arahkan ke halaman login
+            }
+        }
+    }
+
+    // Fungsi untuk mendekode JWT (seperti yang ada sebelumnya)
+    function parseJwt(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error("Error decoding token:", error);
+            return null;
+        }
+    }
+
+    // Panggil fungsi checkLoginStatus() di awal skrip
+    checkLoginStatus();
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +97,7 @@
 
       if (data.status === 'success') {
         alert('Reset password telah berhasil');
+        window.location.href = 'superadmin_accountlist_page.php';
       } else {
         displayError(data.message || 'Failed to send reset link.');
       }
@@ -67,7 +106,7 @@
       displayError('An error occurred. Please try again later.');
     } finally {
       submitButton.disabled = false;
-      submitButton.textContent = 'RESET PASSWORD';
+      submitButton.textContent = 'Reset Password';
     }
   });
 
