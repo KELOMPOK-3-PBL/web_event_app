@@ -195,8 +195,13 @@ function displayRoleButtons(roles) {
     button.textContent = role.charAt(0).toUpperCase() + role.slice(1);
     button.addEventListener('click', () => {
       document.getElementById('roleSelectionContainer').remove();
-      redirectToDashboard(role);
-    });
+      if (role === 'Admin') {
+        alert('Role ini tidak tersedia versi website');
+        window.location.reload();
+        return;
+      } else {
+        redirectToDashboard(role);
+    }});
     roleSelectionContainer.appendChild(button);
   });
 
@@ -208,7 +213,7 @@ function displayRoleButtons(roles) {
 function redirectToDashboard(role) {
   const dashboards = {
     Superadmin: 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php',
-    Admin: 'http://localhost/pbl/web_event_app/admin_page/admin_dashboard.php',
+    Admin: null,
     Propose: 'http://localhost/pbl/web_event_app/propose_page/propose_dashboard.php',
     Member: 'http://localhost/pbl/web_event_app/member_page/member_dashboard.php',
   };

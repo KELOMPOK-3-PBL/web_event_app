@@ -140,7 +140,7 @@ ob_end_flush();
                     <div class="w-1/3">
                         <label for="status" class="block text-gray-700 font-semibold mb-2">Change Status</label>
                         <select name="status" id="status" class="w-full border rounded px-4 py-2 font-semibold">
-                            <option value=2>Review Admin</option>
+                            <option value=3>Review Admin</option>
                             <option value=5>Approved</option>
                             <option value=4>Rejected</option>
                         </select>

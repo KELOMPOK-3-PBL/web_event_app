@@ -92,7 +92,7 @@ fetch('http://localhost/pbl/api-03/routes/available_events.php')
             const newProposedEvents = data.data.filter(event => event.status !== 'Approved' && event.status !== 'Completed');
 
             // Urutkan newProposedEvents berdasarkan status dan waktu
-            const statusOrder = ['Proposed', 'Reviewing', 'Pending', 'Rejected'];
+            const statusOrder = ['Proposed', 'Review Admin', 'Revision Propose', 'Rejected'];
             newProposedEvents.sort((a, b) => {
                 // Urutkan berdasarkan status terlebih dahulu
                 const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
