@@ -110,7 +110,7 @@
                 const newProposedEvents = events.filter(event => event.status !== 'Rejected');
 
                 // Urutkan newProposedEvents berdasarkan status dan waktu
-                const statusOrder = ['Revision Propose', 'Proposed', 'Approved', 'Completed'];
+                const statusOrder = ['Revision Propose', 'Proposed', 'Review Admin', 'Approved', 'Completed'];
                 newProposedEvents.sort((a, b) => {
                     // Urutkan berdasarkan status
                     const statusComparison = statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
