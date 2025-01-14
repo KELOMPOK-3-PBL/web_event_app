@@ -215,7 +215,7 @@ function redirectToDashboard(role) {
     Superadmin: 'http://localhost/pbl/web_event_app/superadmin_page/superadmin_dashboard.php',
     Admin: null,
     Propose: 'http://localhost/pbl/web_event_app/propose_page/propose_dashboard.php',
-    Member: 'http://localhost/pbl/web_event_app/member_page/member_dashboard.php',
+    Member: 'https://polivent.my.id',
   };
 
   const dashboardUrl = dashboards[role];

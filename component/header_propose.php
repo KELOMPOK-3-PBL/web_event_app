@@ -23,10 +23,10 @@
     </div> -->
 </header>
 
-<script>
+<!-- <script>
     // Toggle search bar visibility
     document.getElementById("toggleSearch").addEventListener("click", function () {
         const searchBar = document.getElementById("searchBar");
         searchBar.classList.toggle("flex"); // Toggle visibility using `flex`
     });
-</script>
+</script> -->

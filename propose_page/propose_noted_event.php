@@ -131,7 +131,7 @@ if (isset($_GET['event_id'])) {
                 <!-- Note Section -->
                 <div class="mb-6">
                     <label class="block text-gray-700 font-semibold mb-2" for="note">Note :</label>
-                    <textarea id="note" class="w-full border rounded px-4 py-2 bg-gray-100" rows="4" placeholder="Additional notes..."></textarea>
+                    <textarea id="note" class="w-full border rounded px-4 py-2 bg-gray-100" rows="4" placeholder="Additional notes..." readonly></textarea>
                 </div>
 
                 <!-- Save and Submit Button -->

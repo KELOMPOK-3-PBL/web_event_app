@@ -40,7 +40,7 @@ if (isset($_GET['event_id'])) {
                 <!-- Event Title -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="title">Judul Event</label>
-                    <input type="text" id="title" class="w-full border rounded px-4 py-2" placeholder="Judul event">
+                    <input type="text" id="title" class="w-full border rounded px-4 py-2" placeholder="Judul event" readonly>
                 </div>
                 
                 <!-- Event Category
@@ -52,7 +52,7 @@ if (isset($_GET['event_id'])) {
                 <!-- Category Dropdown -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="category_id">Category</label>
-                    <select id="category_id" class="w-full border rounded px-4 py-2" required>
+                    <select id="category_id" class="w-full border rounded px-4 py-2" required disabled>
                         <option value="" disabled selected>Pilih Category</option>
                         <option value="1">Seminar</option>
                         <option value="2">Lomba</option>
@@ -64,25 +64,25 @@ if (isset($_GET['event_id'])) {
                 <!-- Location -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="location">Location</label>
-                    <input type="text" id="location" class="w-full border rounded px-4 py-2" placeholder="GKT Lt. 2">
+                    <input type="text" id="location" class="w-full border rounded px-4 py-2" placeholder="GKT Lt. 2" readonly>
                 </div>
 
                 <!-- Place -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="place">Place</label>
-                    <input type="text" id="place" class="w-full border rounded px-4 py-2" placeholder="Place" required>
+                    <input type="text" id="place" class="w-full border rounded px-4 py-2" placeholder="Place" required readonly>
                 </div>
                 
                 <!-- Quota Count -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="quota">Quota</label>
-                    <input type="text" id="quota" class="w-full border rounded px-4 py-2" placeholder="200 People">
+                    <input type="text" id="quota" class="w-full border rounded px-4 py-2" placeholder="200 People" readonly>
                 </div>
                 
                 <!-- Date and time -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="date_start">Date and Time</label>
-                    <input type="datetime-local" id="date_start" class="w-full border rounded px-4 py-2" required>
+                    <input type="datetime-local" id="date_start" class="w-full border rounded px-4 py-2" required readonly>
                 </div>
 
                 <!-- Date End
@@ -94,7 +94,7 @@ if (isset($_GET['event_id'])) {
                 <!-- Description -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2" for="description">Description</label>
-                    <textarea id="description" class="w-full border rounded px-4 py-2" rows="4" placeholder="Event description..."></textarea>
+                    <textarea id="description" class="w-full border rounded px-4 py-2" rows="4" placeholder="Event description..." readonly></textarea>
                 </div>
 
                 <!-- preview poster -->

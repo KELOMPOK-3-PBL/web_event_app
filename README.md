@@ -1,18 +1,15 @@
-# web_event_app
-
-# Example headings
-
-## Sample Section
-
-## This'll be a _Helpful_ Section About the Greek Letter Θ!
-
-A heading containing characters not allowed in fragments, UTF-8 characters, two consecutive spaces between the first and second words, and formatting.
-
-## This heading is not unique in the file
-
-TEXT 1
-
-## This heading is not unique in the file
-
-TEXT 2
-
+# Panduan Setup Website Polivent Management
+- Pastikan sudah menginstal composer, penyedia server local (XAMPP atau laragon), dan git
+- Buka Terminal atau Command Prompt
+- Arahkan ke direktori localhost dan buat direktori pbl /htdocs/pbl untuk XAMPP dan /www/pbl untuk laragon
+- Jalankan command "git clone https://github.com/KELOMPOK-3-PBL/web_event_app.git"
+- Jalankan command "git clone https://github.com/KELOMPOK-3-PBL/api-03.git"
+- Masuk ke direktori api-03 jalankan command "composer install"
+- Buka browser dan arahkan ke halaman http://localhost/pbl
+- Buka phpmyadmin, buat database testpbl dan import file test_event_proposal.sql di direktori api-03
+- Untuk user superadmin
+	> email : superadmin@gmail.com
+	> password : 123456 
+- Untuk user propose
+	> email : member_propose@gmail.com
+	> password : 123456 

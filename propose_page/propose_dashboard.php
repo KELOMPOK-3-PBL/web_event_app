@@ -104,7 +104,7 @@ fetch('http://localhost/pbl/api-03/routes/available_events.php')
 
             // Tampilkan event sesuai kategori
             displayEvents(approvedEvents, 'available-events-container');
-            displayEvents(newProposedEvents, 'new-proposed-events-container');
+            // displayEvents(newProposedEvents, 'new-proposed-events-container');
         } else {
             console.error('Failed to fetch events:', data.message);
         }
